@@ -13,8 +13,20 @@ auth.set_access_token(access_token, access_token_secret)
 # Creation of the actual interface, using authentication
 api = tweepy.API(auth)
 
+validUser = False
+
+while validUser == False:
+    username = input("Please enter Twitter username: ")
+    try:
+        user = api.get_user(username)
+        validUser = True
+    except:
+        print("Error. Unable to authenticate username, please try again.")
+
+print("Username: " + user.screen_name + " --- Follower Count: " + str(user.followers_count))
+
 # Retrieve stuff (Everything basically) from the user_timeline
-stuff = api.user_timeline(screen_name = 'tombarden', count = 100, include_rts = True)
+stuff = api.user_timeline(screen_name = user.screen_name, count = 100, include_rts = True)
 
 for tweet in stuff:
     print ("|Tweet| - " + tweet.text + "   ==  |Time| - " + tweet.created_at.strftime('%d/%m/%y -- %H:%M'))
