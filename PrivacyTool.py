@@ -33,7 +33,7 @@ for tweet in stuff:
     print ("|Tweet| - " + tweet.text + "   ==  |Time| - " + tweet.created_at.strftime('%d/%m/%y -- %H:%M'))
 
 
-logfile = open("Output_Log", "w")
+logfile = open("Output_Log.txt", "w")
 
 logfile.write("Test line 1\n")
 logfile.write("Test line 2\n")
