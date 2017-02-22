@@ -1,2 +1,3 @@
 # Ignore the generated txt log file from the program
 *.txt
+!requirements.txt
