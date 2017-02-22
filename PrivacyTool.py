@@ -27,17 +27,13 @@ print("Username: " + user.screen_name + " --- Follower Count: " + str(user.follo
 print("Name: " + user.name + "\n\n")
 
 # Retrieve stuff (Everything basically) from the user_timeline
-stuff = api.user_timeline(screen_name = user.screen_name, count = 100, include_rts = True)
-
-for tweet in stuff:
-    print ("|Tweet| - " + tweet.text + "   ==  |Time| - " + tweet.created_at.strftime('%d/%m/%y -- %H:%M'))
-
+stuff = api.user_timeline(screen_name = user.screen_name, count = 100, include_rts = False)
 
 logfile = open("Output_Log.txt", "w")
+logfile.write("Username: " + user.screen_name + "   |   Name: " + user.name + "\n\n")
 
-logfile.write("Test line 1\n")
-logfile.write("Test line 2\n")
-logfile.write("Username: " + user.screen_name + "   |   Name: " + user.name)
+for tweet in stuff:
+    logfile.write("|Tweet| - " + tweet.text + "   ==  |Time| - " + tweet.created_at.strftime('%d/%m/%y -- %H:%M\n'))
 
 logfile.close()
 
