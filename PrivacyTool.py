@@ -27,15 +27,21 @@ print("Username: " + user.screen_name + " --- Follower Count: " + str(user.follo
 print("Name: " + user.name + "\n\n")
 
 # Retrieve stuff (Everything basically) from the user_timeline
-stuff = api.user_timeline(screen_name = user.screen_name, count = 100, include_rts = False)
+stuff = api.user_timeline(screen_name = user.screen_name, count = 200, include_rts = True)
 
-logfile = open("Output_Log.txt", "w")
-logfile.write("Username: " + user.screen_name + "   |   Name: " + user.name + "\n\n")
+def generateLogFile():
+    logfile = open("Output_Log.txt", "w")
+    logfile.write("#--- Username: " + user.screen_name + " ---#\n")
+    logfile.write("#--- Name: " + user.name + " ---#\n")
+    logfile.write("#--- Follower Count: " + str(user.followers_count) + " ---#\n")
+    logfile.write("#--- Tweets ---#\n\n")
 
-for tweet in stuff:
-    logfile.write("|Tweet| - " + tweet.text + "   ==  |Time| - " + tweet.created_at.strftime('%d/%m/%y -- %H:%M\n'))
+    for tweet in stuff:
+        logfile.write("|Tweet| - " + tweet.text + "   ==  |Time| - " + tweet.created_at.strftime('%d/%m/%y -- %H:%M\n'))
 
-logfile.close()
+    logfile.close()
+
+generateLogFile()
 
 # Sample method, used to update a status
 # api.update_status('Test')
