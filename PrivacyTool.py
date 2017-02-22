@@ -27,7 +27,23 @@ print("Username: " + user.screen_name + " --- Follower Count: " + str(user.follo
 print("Name: " + user.name + "\n\n")
 
 # Retrieve stuff (Everything basically) from the user_timeline
-stuff = api.user_timeline(screen_name = user.screen_name, count = 200, include_rts = True)
+#stuff = api.user_timeline(screen_name = user.screen_name, count = 200, include_rts = True)
+
+page_list = []
+n = 0
+
+for page in tweepy.Cursor(api.user_timeline, id = user.screen_name, count = 100, include_rts = True).pages(16):
+    page_list.append(page)
+    n = n+1
+    print(n)
+
+count = 1
+for page in page_list:
+    for status in page:
+        if count % 25 == 0:
+            print("\n\n")
+        print("|Tweet " + str(count) + "| " + status.text + "   ==   |Time| - " + status.created_at.strftime('%d/%m/%y -- %H:%M'))
+        count = count+1
 
 def generateLogFile():
     logfile = open("Output_Log.txt", "w")
@@ -41,7 +57,7 @@ def generateLogFile():
 
     logfile.close()
 
-generateLogFile()
+#generateLogFile()
 
 # Sample method, used to update a status
 # api.update_status('Test')
