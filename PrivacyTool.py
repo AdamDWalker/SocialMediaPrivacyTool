@@ -23,8 +23,20 @@ while validUser == False:
     except:
         print("Error. Unable to authenticate username, please try again.")
 
-print("Username: " + user.screen_name + " --- Follower Count: " + str(user.followers_count))
-print("Name: " + user.name + "\n\n")
+# Just makes it easier to change options when the program is running
+retweet_input = input("Include retweets? (Y/N): ")
+
+if retweet_input == "Y" or retweet_input == "y":
+    include_retweets = True
+elif retweet_input == "N" or retweet_input == "n":
+    include_retweets = False
+else:
+    include_retweets = True
+    print("/nInvalid input, defaulting to yes")
+
+
+print("Username: " + user.screen_name + " --- Name: " + user.name)
+print("Follower Count: " + str(user.followers_count) + "\n\n")
 
 # Retrieve stuff (Everything basically) from the user_timeline
 #stuff = api.user_timeline(screen_name = user.screen_name, count = 200, include_rts = True)
@@ -32,18 +44,10 @@ print("Name: " + user.name + "\n\n")
 page_list = []
 n = 0
 
-for page in tweepy.Cursor(api.user_timeline, id = user.screen_name, count = 100, include_rts = True).pages(16):
+for page in tweepy.Cursor(api.user_timeline, id = user.screen_name, count = 200, include_rts = include_retweets).pages(32):
     page_list.append(page)
     n = n+1
     print(n)
-
-count = 1
-for page in page_list:
-    for status in page:
-        if count % 25 == 0:
-            print("\n\n")
-        print("|Tweet " + str(count) + "| " + status.text + "   ==   |Time| - " + status.created_at.strftime('%d/%m/%y -- %H:%M'))
-        count = count+1
 
 def generateLogFile():
     logfile = open("Output_Log.txt", "w")
@@ -52,12 +56,18 @@ def generateLogFile():
     logfile.write("#--- Follower Count: " + str(user.followers_count) + " ---#\n")
     logfile.write("#--- Tweets ---#\n\n")
 
-    for tweet in stuff:
-        logfile.write("|Tweet| - " + tweet.text + "   ==  |Time| - " + tweet.created_at.strftime('%d/%m/%y -- %H:%M\n'))
+    count = 1
+    for page in page_list:
+        for status in page:
+            logfile.write("|Tweet " + str(count) + "| " + status.text + "   ==   |Time| - " + status.created_at.strftime('%d/%m/%y -- %H:%M\n'))
+            if count % 25 == 0:
+                logfile.write("\n\n")
+            count = count+1
+
+#    for tweet in stuff:
+#        logfile.write("|Tweet| - " + tweet.text + "   ==  |Time| - " + tweet.created_at.strftime('%d/%m/%y -- %H:%M\n'))
 
     logfile.close()
 
-#generateLogFile()
-
-# Sample method, used to update a status
-# api.update_status('Test')
+generateLogFile()
+print("\nProgram complete. Please see output file for details.")
