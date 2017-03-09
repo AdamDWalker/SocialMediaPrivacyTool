@@ -51,15 +51,15 @@ for page in tweepy.Cursor(api.user_timeline, id = user.screen_name, count = 200,
 
 def generateLogFile():
     logfile = open("Output_Log.txt", "w")
-    logfile.write("#--- Username: " + user.screen_name + " ---#\n")
-    logfile.write("#--- Name: " + user.name + " ---#\n")
-    logfile.write("#--- Follower Count: " + str(user.followers_count) + " ---#\n")
-    logfile.write("#--- Tweets ---#\n\n")
+    # logfile.write("#--- Username: " + user.screen_name + " ---#\n")
+    # logfile.write("#--- Name: " + user.name + " ---#\n")
+    # logfile.write("#--- Follower Count: " + str(user.followers_count) + " ---#\n")
+    # logfile.write("#--- Tweets ---#\n\n")
 
     count = 1
     for page in page_list:
         for status in page:
-            logfile.write("|Tweet " + str(count) + "| " + status.text + "   ==   |Time| - " + status.created_at.strftime('%d/%m/%y -- %H:%M\n'))
+            logfile.write("|Tweet " + str(count) + "| " + status.text + "   ==   |Time| - " + status.created_at.strftime('%d/%m/%y -- %H:%M ~#~\n' ))
             if count % 25 == 0:
                 logfile.write("\n\n")
             count = count+1
