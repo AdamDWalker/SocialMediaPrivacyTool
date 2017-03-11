@@ -8,15 +8,17 @@ with open("Output_Log.txt") as f:
 for tweet in tweets:
     tweet.strip('\n')
 
+# Generate a random value so as to print a random tweet as a test sentence
 rand = random.randrange(0, len(tweets))
-print(rand)
-#tokens = nltk.word_tokenize(sentence)
 
-#tagged = nltk.pos_tag(tokens)
+sentence = str(tweets[rand])
+tokens = nltk.word_tokenize(sentence)
+tagged = nltk.pos_tag(tokens)
+entities = nltk.chunk.ne_chunk(tagged)
 
-#entities = nltk.chunk.ne_chunk(sentence)
-#print (tokens)
-#print("\n")
-#print(tagged)
-for tweet in tweets:
-    print(tweets[rand] + "\n")
+print(sentence + "\n")
+print(tokens)
+print("\n")
+print(tagged)
+print("\n")
+print(entities)
