@@ -57,11 +57,8 @@ for status in page:
 
 def generateLogFile():
     logfile = open("Output_Log.txt", "w")
-    # logfile.write("#--- Username: " + user.screen_name + " ---#\n")
-    # logfile.write("#--- Name: " + user.name + " ---#\n")
-    # logfile.write("#--- Follower Count: " + str(user.followers_count) + " ---#\n")
-    # logfile.write("#--- Tweets ---#\n\n")
 
+# Print each tweet and it's timestamp into a log file, with a line break every 25 for easier readability
     count = 1
     for page in page_list:
         for tweet in account.tweets:
@@ -69,9 +66,6 @@ def generateLogFile():
             if count % 25 == 0:
                 logfile.write("\n\n")
             count = count+1
-
-#    for tweet in stuff:
-#        logfile.write("|Tweet| - " + tweet.text + "   ==  |Time| - " + tweet.created_at.strftime('%d/%m/%y -- %H:%M\n'))
 
     logfile.close()
 
