@@ -1,4 +1,5 @@
 import tweepy
+import Classes
 
 # Consumer keys and access tokens, used for OAuth
 consumer_key = 'YUOKTebHRQH1MUv3ZlIZ3SKM3'
@@ -34,9 +35,10 @@ else:
     include_retweets = True
     print("/nInvalid input, defaulting to yes")
 
+account = Classes.TwitterAccount(user.screen_name, user.name, user.followers_count)
 
-print("Username: " + user.screen_name + " --- Name: " + user.name)
-print("Follower Count: " + str(user.followers_count) + "\n\n")
+print("Username: " + account.username + " --- Name: " + account.realname)
+print("Follower Count: " + str(account.followers) + "\n\n")
 
 # Retrieve stuff (Everything basically) from the user_timeline
 #stuff = api.user_timeline(screen_name = user.screen_name, count = 200, include_rts = True)
@@ -49,6 +51,10 @@ for page in tweepy.Cursor(api.user_timeline, id = user.screen_name, count = 200,
     n = n+1
     print(n)
 
+for status in page:
+    tweet = Classes.Tweet(status.text, status.created_at)
+    account.tweets.append(tweet)
+
 def generateLogFile():
     logfile = open("Output_Log.txt", "w")
     # logfile.write("#--- Username: " + user.screen_name + " ---#\n")
@@ -58,8 +64,8 @@ def generateLogFile():
 
     count = 1
     for page in page_list:
-        for status in page:
-            logfile.write("|Tweet " + str(count) + "| " + status.text + "   ==   |Time| - " + status.created_at.strftime('%d/%m/%y -- %H:%M ~#~\n' ))
+        for tweet in account.tweets:
+            logfile.write("|Tweet " + str(count) + "| " + tweet.text + "   ==   |Time| - " + tweet.date.strftime('%d/%m/%y -- %H:%M ~#~\n' ))
             if count % 25 == 0:
                 logfile.write("\n\n")
             count = count+1
