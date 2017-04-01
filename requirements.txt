@@ -2,3 +2,4 @@
 
 - tweepy
 - nltk
+- twython // For vader sentiment analysis, not imported anywhere

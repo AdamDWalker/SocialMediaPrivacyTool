@@ -1,5 +1,6 @@
 import nltk
 import random
+from nltk.sentiment.vader import SentimentIntensityAnalyzer as vaderSentiment
 
 with open("Output_Log.txt") as f:
     tweets = f.read().split('~#~')
@@ -12,13 +13,17 @@ for tweet in tweets:
 rand = random.randrange(0, len(tweets))
 
 sentence = str(tweets[rand])
-tokens = nltk.word_tokenize(sentence)
-tagged = nltk.pos_tag(tokens)
-entities = nltk.chunk.ne_chunk(tagged)
+# tokens = nltk.word_tokenize(sentence)
+# tagged = nltk.pos_tag(tokens)
+# entities = nltk.chunk.ne_chunk(tagged)
+
+vs = vaderSentiment()
+vsVal = vs.polarity_scores(sentence)
 
 print(sentence + "\n")
-print(tokens)
-print("\n")
-print(tagged)
-print("\n")
-print(entities)
+print("\t" + str(vsVal))
+# print(tokens)
+# print("\n")
+# print(tagged)
+# print("\n")
+# print(entities)
