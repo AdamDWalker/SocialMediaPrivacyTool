@@ -17,11 +17,14 @@ sentence = str(tweets[rand])
 # tagged = nltk.pos_tag(tokens)
 # entities = nltk.chunk.ne_chunk(tagged)
 
-vs = vaderSentiment()
-vsVal = vs.polarity_scores(sentence)
+def getSentimentScores(sentence):
+    vs = vaderSentiment()
+    vsVal = vs.polarity_scores(sentence)
+    return vsVal
+
 
 print(sentence + "\n")
-print("\t" + str(vsVal))
+print("\t" + str(getSentimentScores(sentence)))
 # print(tokens)
 # print("\n")
 # print(tagged)
