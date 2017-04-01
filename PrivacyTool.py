@@ -51,9 +51,12 @@ for page in tweepy.Cursor(api.user_timeline, id = user.screen_name, count = 200,
     n = n+1
     print(n)
 
-for status in page:
-    tweet = Classes.Tweet(status.text, status.created_at)
-    account.tweets.append(tweet)
+for page in page_list:
+    for status in page:
+        tweet = Classes.Tweet(status.text, status.created_at)
+        account.tweets.append(tweet)
+
+print("\nExtracted: " + str(len(account.tweets)) + " tweets.")
 
 def generateLogFile():
     logfile = open("Output_Log.txt", "w")
