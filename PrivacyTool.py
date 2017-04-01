@@ -1,5 +1,6 @@
 import tweepy
 import Classes
+import TweetAnalysis
 
 # Consumer keys and access tokens, used for OAuth
 consumer_key = 'YUOKTebHRQH1MUv3ZlIZ3SKM3'
@@ -63,12 +64,13 @@ def generateLogFile():
 
 # Print each tweet and it's timestamp into a log file, with a line break every 25 for easier readability
     count = 1
-    for page in page_list:
-        for tweet in account.tweets:
-            logfile.write("|Tweet " + str(count) + "| " + tweet.text + "   ==   |Time| - " + tweet.date.strftime('%d/%m/%y -- %H:%M ~#~\n' ))
-            if count % 25 == 0:
-                logfile.write("\n\n")
-            count = count+1
+    for tweet in account.tweets:
+        logfile.write("|Tweet " + str(count) + "| " + tweet.text + "   ==   |Time| - " + tweet.date.strftime('%d/%m/%y -- %H:%M ~#~\n' ))
+        vs = TweetAnalysis.getSentimentScores(tweet.text)
+        logfile.write("\t" + str(vs) + "\n")
+        if count % 25 == 0:
+            logfile.write("\n\n")
+        count = count+1
 
     logfile.close()
 
