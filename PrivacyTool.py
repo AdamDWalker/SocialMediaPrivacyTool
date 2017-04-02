@@ -78,10 +78,13 @@ for tweet in account.tweets:
 
     if (val > 0):
         totalPos += 1
+        tweet.sentiment = 1
     elif (val == 0):
         totalNeu += 1
+        tweet.sentiment = 0
     else:
         totalNeg += 1
+        tweet.sentiment = -1
 
 tweetCount = len(account.tweets)
 posPercent = float("{0:.2f}".format((totalPos / tweetCount) * 100))

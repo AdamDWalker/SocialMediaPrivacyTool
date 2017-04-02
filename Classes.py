@@ -19,3 +19,4 @@ class Tweet(object):
     def __init__(self, text, date):
         self.text = text
         self.date = date
+        self.sentiment = 0 # This represents whether the tweet is positive/neutral/negative via 1/0/-1
