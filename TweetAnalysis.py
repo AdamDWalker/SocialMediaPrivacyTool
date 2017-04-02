@@ -7,6 +7,17 @@ def getSentimentScores(sentence):
     vsVal = vs.polarity_scores(sentence)
     return vsVal
 
+def getSentimentClass(sentScores):
+    if(list(sentScores.values())[3] > 0):
+        #print(str(val) + " [Positive]")
+        return 1
+    elif(list(sentScores.values())[3] == 0):
+        #print(str(val) + " [Neutral]")
+        return 0
+    else:
+        #print(str(val) + " [Negative]")
+        return -1
+
 if __name__ == '__main__':
     print("Test")
     with open("Output_Log.txt") as f:
