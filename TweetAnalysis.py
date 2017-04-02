@@ -1,3 +1,11 @@
+'''
+    File Name: TweetAnalysis.py
+    Author: Adam Walker
+    Date Created: 05/03/2017
+    Date Last Modified: 02/04/2017
+    Python Version: 3.6.0
+'''
+
 import nltk
 import random
 from nltk.sentiment.vader import SentimentIntensityAnalyzer as vaderSentiment

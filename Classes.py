@@ -1,4 +1,10 @@
-
+'''
+    File Name: Classes.py
+    Author: Adam Walker
+    Date Created: 12/03/2017
+    Date Last Modified: 02/04/2017
+    Python Version: 3.6.0
+'''
 
 class TwitterAccount(object):
 
