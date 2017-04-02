@@ -9,6 +9,7 @@
 import tweepy
 import Classes
 import TweetAnalysis
+import matplotlib.pyplot as plot
 
 # Consumer keys and access tokens, used for OAuth
 consumer_key = 'YUOKTebHRQH1MUv3ZlIZ3SKM3'
@@ -91,6 +92,25 @@ print("Tweet count: " + str(len(account.tweets)))
 print("Total Positive: " + str(totalPos) + " Percentage: " + str(posPercent))
 print("Total Neutral: " + str(totalNeu) + " Percentage: " + str(neuPercent))
 print("Total Negative: " + str(totalNeg) + " Percentage: " + str(negPercent))
+
+labels = ["Positive", "Negative", "Neutral"]
+data = [totalPos, totalNeg, totalNeu]
+
+if(posPercent > negPercent and posPercent > neuPercent):
+    explode = [0.1, 0, 0]
+elif(negPercent > posPercent and negPercent > neuPercent):
+    explode = [0, 0.1, 0]
+else:
+    explode = [0, 0, 0.1]
+
+fig = plot.figure(1, figsize=(6, 6))
+ax = plot.axes([0.1, 0.1, 0.8, 0.8])
+
+ax.pie(data, explode=explode, labels=labels, autopct='%1.1f%%',
+        shadow=False, startangle=90)
+ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+ax.set_title("Tweet sentiment percentages for user: " + str(account.username))
+fig.savefig("TweetSentiment.png", bbox_inches='tight')
 
 def generateLogFile():
     logfile = open("Output_Log.txt", "w")
