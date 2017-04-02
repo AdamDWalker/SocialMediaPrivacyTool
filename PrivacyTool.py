@@ -57,7 +57,32 @@ for page in page_list:
         tweet = Classes.Tweet(status.text, status.created_at)
         account.tweets.append(tweet)
 
-print("\nExtracted: " + str(len(account.tweets)) + " tweets.")
+print("\nExtracted: " + str(len(account.tweets)) + " tweets.\n")
+
+totalPos = 0
+totalNeu = 0
+totalNeg = 0
+
+for tweet in account.tweets:
+    vs = TweetAnalysis.getSentimentScores(tweet.text)
+    val = TweetAnalysis.getSentimentClass(vs)
+
+    if (val > 0):
+        totalPos += 1
+    elif (val == 0):
+        totalNeu += 1
+    else:
+        totalNeg += 1
+
+tweetCount = len(account.tweets)
+posPercent = float("{0:.2f}".format((totalPos / tweetCount) * 100))
+neuPercent = float("{0:.2f}".format((totalNeu / tweetCount) * 100))
+negPercent = float("{0:.2f}".format((totalNeg / tweetCount) * 100))
+
+print("Tweet count: " + str(len(account.tweets)))
+print("Total Positive: " + str(totalPos) + " Percentage: " + str(posPercent))
+print("Total Neutral: " + str(totalNeu) + " Percentage: " + str(neuPercent))
+print("Total Negative: " + str(totalNeg) + " Percentage: " + str(negPercent))
 
 def generateLogFile():
     logfile = open("Output_Log.txt", "w")
@@ -66,8 +91,8 @@ def generateLogFile():
     count = 1
     for tweet in account.tweets:
         logfile.write("|Tweet " + str(count) + "| " + tweet.text + "   ==   |Time| - " + tweet.date.strftime('%d/%m/%y -- %H:%M ~#~\n' ))
-        vs = TweetAnalysis.getSentimentScores(tweet.text)
-        logfile.write("\t" + str(vs) + "\n")
+        # vs = TweetAnalysis.getSentimentScores(tweet.text)
+        # logfile.write("\t" + str(vs) + "\n")
         if count % 25 == 0:
             logfile.write("\n\n")
         count = count+1
