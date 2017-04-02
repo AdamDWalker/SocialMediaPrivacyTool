@@ -7,14 +7,17 @@
 '''
 
 import nltk
-import random
 from nltk.sentiment.vader import SentimentIntensityAnalyzer as vaderSentiment
 
+## This function takes a sentence and returns a dictionary containing
+## the sentiment polarity scores from the vader sentiment analyser
 def getSentimentScores(sentence):
     vs = vaderSentiment()
     vsVal = vs.polarity_scores(sentence)
     return vsVal
 
+## Takes the dictionary of polarity scores and returns an integer to represent
+## whether the compound score shows an overall pos/neg/neutral sentiment
 def getSentimentClass(sentScores):
     if(list(sentScores.values())[3] > 0):
         #print(str(val) + " [Positive]")
@@ -32,19 +35,6 @@ if __name__ == '__main__':
     # you may also want to remove whitespace characters like `\n` at the end of each line
     #tweets = [x.strip('\n') for x in content]
 
-    # Generate a random value so as to print a random tweet as a test sentence
-    rand = random.randrange(0, len(tweets))
-
-    sentence = str(tweets[rand])
     # tokens = nltk.word_tokenize(sentence)
     # tagged = nltk.pos_tag(tokens)
     # entities = nltk.chunk.ne_chunk(tagged)
-
-
-    # print(sentence + "\n")
-    # print("\t" + str(getSentimentScores(sentence)))
-    # print(tokens)
-    # print("\n")
-    # print(tagged)
-    # print("\n")
-    # print(entities)

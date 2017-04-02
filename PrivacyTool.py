@@ -112,6 +112,9 @@ ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
 ax.set_title("Tweet sentiment percentages for user: " + str(account.username))
 fig.savefig("TweetSentiment.png", bbox_inches='tight')
 
+## This function is to take various pieces of data collected and
+## log them out into a text file that can be used for other things
+## == Ideally this should be shortened to just logging and no analysis, and also moved to the start of the code/another file == ##
 def generateLogFile():
     logfile = open("Output_Log.txt", "w")
 
