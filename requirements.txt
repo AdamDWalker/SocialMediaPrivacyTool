@@ -1,6 +1,6 @@
 # This is a list of the libraries required for this project to run
 
-- tweepy
-- nltk
-- twython // For vader sentiment analysis, not imported anywhere
-- matplotlib
+- tweepy >= 3.5.0
+- nltk >= 3.2.2
+- twython >= 3.4.0
+- matplotlib >= 2.0.0
