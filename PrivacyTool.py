@@ -2,7 +2,7 @@
     File Name: PrivacyTool.py
     Author: Adam Walker
     Date Created: 20/02/2017
-    Date Last Modified: 02/04/2017
+    Date Last Modified: 03/04/2017
     Python Version: 3.6.0
 '''
 
@@ -20,6 +20,17 @@ access_token_secret = 'Fu6m7teENyTVs92mWUt0UKriZun1vC3Ny5o1WkwpWlM8f'
 # OAuth process, using the keys and tokens
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
+
+def generatePieChart(data, labels, explode, title, filename):
+    fig = plot.figure(1, figsize=(6, 6))
+    ax = plot.axes([0.1, 0.1, 0.8, 0.8])
+
+    ax.pie(data, explode=explode, labels=labels, autopct='%1.1f%%',
+            shadow=False, startangle=90)
+    ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+    ax.set_title(title)
+    fig.savefig(filename, bbox_inches='tight')
+    print("\nChart generated and saved as: " + filename)
 
 # Creation of the actual interface, using authentication
 api = tweepy.API(auth)
@@ -98,6 +109,7 @@ print("Total Negative: " + str(totalNeg) + " Percentage: " + str(negPercent))
 
 labels = ["Positive", "Negative", "Neutral"]
 data = [totalPos, totalNeg, totalNeu]
+title = "Tweet sentiment percentages for user: " + str(account.username)
 
 if(posPercent > negPercent and posPercent > neuPercent):
     explode = [0.1, 0, 0]
@@ -106,14 +118,7 @@ elif(negPercent > posPercent and negPercent > neuPercent):
 else:
     explode = [0, 0, 0.1]
 
-fig = plot.figure(1, figsize=(6, 6))
-ax = plot.axes([0.1, 0.1, 0.8, 0.8])
-
-ax.pie(data, explode=explode, labels=labels, autopct='%1.1f%%',
-        shadow=False, startangle=90)
-ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-ax.set_title("Tweet sentiment percentages for user: " + str(account.username))
-fig.savefig("TweetSentiment.png", bbox_inches='tight')
+generatePieChart(data, labels, explode, title, "TweetSentiments.png")
 
 ## This function is to take various pieces of data collected and
 ## log them out into a text file that can be used for other things
