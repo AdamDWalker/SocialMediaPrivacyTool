@@ -2,7 +2,7 @@
     File Name: PrivacyTool.py
     Author: Adam Walker
     Date Created: 20/02/2017
-    Date Last Modified: 03/04/2017
+    Date Last Modified: 04/04/2017
     Python Version: 3.6.0
 '''
 
@@ -10,6 +10,7 @@ import tweepy
 import Classes
 import TweetAnalysis
 import matplotlib.pyplot as plot
+from collections import Counter
 
 # Consumer keys and access tokens, used for OAuth
 consumer_key = 'YUOKTebHRQH1MUv3ZlIZ3SKM3'
@@ -84,6 +85,14 @@ totalNeu = 0
 totalNeg = 0
 
 for tweet in account.tweets:
+    users = TweetAnalysis.extractUsernames(tweet.text)
+
+    for user in users:
+        if (user in account.associatedUsers):
+            account.associatedUsers[user] += 1
+        else:
+            account.associatedUsers[user] = 1
+
     vs = TweetAnalysis.getSentimentScores(tweet.text)
     val = TweetAnalysis.getSentimentClass(vs)
 
@@ -97,12 +106,19 @@ for tweet in account.tweets:
         totalNeg += 1
         tweet.sentiment = -1
 
+d = Counter(account.associatedUsers)
+d.most_common()
+print("Top 3 most tweeted to users by: " + str(account.realname))
+for k, v in d.most_common(3):
+    print ('%s: %i' % (k, v))
+# print (account.associatedUsers)
+
 tweetCount = len(account.tweets)
 posPercent = float("{0:.2f}".format((totalPos / tweetCount) * 100))
 neuPercent = float("{0:.2f}".format((totalNeu / tweetCount) * 100))
 negPercent = float("{0:.2f}".format((totalNeg / tweetCount) * 100))
 
-print("Tweet count: " + str(len(account.tweets)))
+print("\nTweet count: " + str(len(account.tweets)))
 print("Total Positive: " + str(totalPos) + " Percentage: " + str(posPercent))
 print("Total Neutral: " + str(totalNeu) + " Percentage: " + str(neuPercent))
 print("Total Negative: " + str(totalNeg) + " Percentage: " + str(negPercent))

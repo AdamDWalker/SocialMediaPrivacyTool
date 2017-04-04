@@ -2,11 +2,12 @@
     File Name: TweetAnalysis.py
     Author: Adam Walker
     Date Created: 05/03/2017
-    Date Last Modified: 02/04/2017
+    Date Last Modified: 04/04/2017
     Python Version: 3.6.0
 '''
 
 import nltk
+import re
 from nltk.sentiment.vader import SentimentIntensityAnalyzer as vaderSentiment
 
 ## This function takes a sentence and returns a dictionary containing
@@ -28,6 +29,13 @@ def getSentimentClass(sentScores):
     else:
         #print(str(val) + " [Negative]")
         return -1
+
+## Takes the text string of a tweet and returns an array of any usernames in that tweet
+def extractUsernames(tweet):
+    twitter_username_re = re.findall(r'@([A-Za-z0-9_]+)', tweet)
+    # if(len(twitter_username_re) != 0):
+    #     print(twitter_username_re)
+    return twitter_username_re
 
 if __name__ == '__main__':
     with open("Output_Log.txt") as f:

@@ -2,7 +2,7 @@
     File Name: Classes.py
     Author: Adam Walker
     Date Created: 12/03/2017
-    Date Last Modified: 02/04/2017
+    Date Last Modified: 04/04/2017
     Python Version: 3.6.0
 '''
 
@@ -13,6 +13,7 @@ class TwitterAccount(object):
         self.realname = realname
         self.followers = followers
         self.tweets = []
+        self.associatedUsers = {}
 
 class Tweet(object):
 
