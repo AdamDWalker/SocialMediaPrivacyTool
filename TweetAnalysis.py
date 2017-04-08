@@ -9,7 +9,7 @@
 import nltk
 import re
 from nltk.sentiment.vader import SentimentIntensityAnalyzer as vaderSentiment
-
+from geopy.geocoders import Nominatim
 ## This function takes a sentence and returns a dictionary containing
 ## the sentiment polarity scores from the vader sentiment analyser
 def getSentimentScores(sentence):
@@ -36,6 +36,13 @@ def extractUsernames(tweet):
     # if(len(twitter_username_re) != 0):
     #     print(twitter_username_re)
     return twitter_username_re
+
+## Take lat and long, convert to a string for the function format and return the address from a reverse lookup
+def GetAddressFromCoords(lat, long):
+    coords = str(lat) + ", " + str(long)
+    geolocator = Nominatim()
+    location = geolocator.reverse(coords)
+    return location.address
 
 if __name__ == '__main__':
     with open("Output_Log.txt") as f:

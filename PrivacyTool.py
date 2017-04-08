@@ -76,6 +76,11 @@ for page in tweepy.Cursor(api.user_timeline, id = user.screen_name, count = 200,
 for page in page_list:
     for status in page:
         tweet = Classes.Tweet(status.text, status.created_at, status.coordinates)
+        if(tweet.coordinates != None):
+            tweet.long = tweet.coordinates.get('coordinates', None)[0]
+            tweet.lat = tweet.coordinates.get('coordinates', None)[1]
+            tweet.location = TweetAnalysis.GetAddressFromCoords(tweet.lat, tweet.long)
+            #print(str(tweet.coordinates.get('coordinates', 'No available data')[0]))
         account.tweets.append(tweet)
 
 print("\nExtracted: " + str(len(account.tweets)) + " tweets.\n")
@@ -149,7 +154,7 @@ def generateLogFile():
     count = 1
     for tweet in account.tweets:
         logfile.write("|Tweet " + str(count) + "| " + tweet.text + "   ==   |Time| - " + tweet.date.strftime('%d/%m/%y -- %H:%M ~#~\n'))
-        logfile.write("\tSentiment: " + str(tweet.sentiment) + "  ==  |Coords| " + str(tweet.coordinates) + "\n")
+        logfile.write("\tSentiment: " + str(tweet.sentiment) + "  ==  |Coords| " + str(tweet.coordinates) + "  ==  |Location| " + tweet.location + "\n")
         if count % 25 == 0:
             logfile.write("\n\n")
         count = count+1
