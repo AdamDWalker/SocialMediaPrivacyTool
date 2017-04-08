@@ -75,7 +75,7 @@ for page in tweepy.Cursor(api.user_timeline, id = user.screen_name, count = 200,
 
 for page in page_list:
     for status in page:
-        tweet = Classes.Tweet(status.text, status.created_at)
+        tweet = Classes.Tweet(status.text, status.created_at, status.coordinates)
         account.tweets.append(tweet)
 
 print("\nExtracted: " + str(len(account.tweets)) + " tweets.\n")
@@ -83,6 +83,7 @@ print("\nExtracted: " + str(len(account.tweets)) + " tweets.\n")
 totalPos = 0
 totalNeu = 0
 totalNeg = 0
+locationCount = 0
 
 for tweet in account.tweets:
     users = TweetAnalysis.extractUsernames(tweet.text)
@@ -104,12 +105,16 @@ for tweet in account.tweets:
         totalNeg += 1
     tweet.sentiment = list(vs.values())[3]
 
+    if(tweet.coordinates != None):
+        locationCount += 1
+
 d = Counter(account.associatedUsers)
 d.most_common()
 print("Top 3 most tweeted to users by: " + str(account.realname))
 for k, v in d.most_common(3):
     print ('%s: %i' % (k, v))
-# print (account.associatedUsers)
+
+print ("\nTotal location enabled tweets: " + str(locationCount))
 
 tweetCount = len(account.tweets)
 posPercent = float("{0:.2f}".format((totalPos / tweetCount) * 100))
@@ -143,8 +148,8 @@ def generateLogFile():
 # Print each tweet and it's timestamp into a log file, with a line break every 25 for easier readability
     count = 1
     for tweet in account.tweets:
-        logfile.write("|Tweet " + str(count) + "| " + tweet.text + "   ==   |Time| - " + tweet.date.strftime('%d/%m/%y -- %H:%M ~#~\n' ))
-        logfile.write("\tSentiment: " + str(tweet.sentiment) + "\n")
+        logfile.write("|Tweet " + str(count) + "| " + tweet.text + "   ==   |Time| - " + tweet.date.strftime('%d/%m/%y -- %H:%M ~#~\n'))
+        logfile.write("\tSentiment: " + str(tweet.sentiment) + "  ==  |Coords| " + str(tweet.coordinates) + "\n")
         if count % 25 == 0:
             logfile.write("\n\n")
         count = count+1

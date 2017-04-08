@@ -17,7 +17,9 @@ class TwitterAccount(object):
 
 class Tweet(object):
 
-    def __init__(self, text, date):
+    def __init__(self, text, date, coordinates):
         self.text = text
         self.date = date
+        self.coordinates = coordinates
+        #self.location
         self.sentiment = 0 # This represents whether the tweet is positive/neutral/negative via 1/0/-1
