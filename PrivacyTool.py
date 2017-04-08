@@ -54,8 +54,8 @@ if retweet_input == "Y" or retweet_input == "y":
 elif retweet_input == "N" or retweet_input == "n":
     include_retweets = False
 else:
-    include_retweets = True
-    print("/nInvalid input, defaulting to yes")
+    include_retweets = False
+    print("/nInvalid input, defaulting to no")
 
 account = Classes.TwitterAccount(user.screen_name, user.name, user.followers_count)
 
