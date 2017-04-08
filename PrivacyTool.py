@@ -2,7 +2,7 @@
     File Name: PrivacyTool.py
     Author: Adam Walker
     Date Created: 20/02/2017
-    Date Last Modified: 04/04/2017
+    Date Last Modified: 08/04/2017
     Python Version: 3.6.0
 '''
 
@@ -98,13 +98,11 @@ for tweet in account.tweets:
 
     if (val > 0):
         totalPos += 1
-        tweet.sentiment = 1
     elif (val == 0):
         totalNeu += 1
-        tweet.sentiment = 0
     else:
         totalNeg += 1
-        tweet.sentiment = -1
+    tweet.sentiment = list(vs.values())[3]
 
 d = Counter(account.associatedUsers)
 d.most_common()
@@ -146,8 +144,7 @@ def generateLogFile():
     count = 1
     for tweet in account.tweets:
         logfile.write("|Tweet " + str(count) + "| " + tweet.text + "   ==   |Time| - " + tweet.date.strftime('%d/%m/%y -- %H:%M ~#~\n' ))
-        # vs = TweetAnalysis.getSentimentScores(tweet.text)
-        # logfile.write("\t" + str(vs) + "\n")
+        logfile.write("\tSentiment: " + str(tweet.sentiment) + "\n")
         if count % 25 == 0:
             logfile.write("\n\n")
         count = count+1
