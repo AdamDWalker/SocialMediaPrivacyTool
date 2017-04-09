@@ -32,7 +32,7 @@ def generatePieChart(n, data, labels, explode, title, filename):
             shadow=False, startangle=90)
     ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
     ax.set_title(title)
-    fig.savefig(filename, bbox_inches='tight')
+    fig.savefig("Output_Images/" + filename, bbox_inches='tight')
     print("\nChart generated and saved as: " + filename)
 
 def generateBarChart(n, data1, data2, labels, legend, y_label, x_label, title, filename):
@@ -52,8 +52,10 @@ def generateBarChart(n, data1, data2, labels, legend, y_label, x_label, title, f
     ax.set_xlabel(x_label)
 
     ax.set_title(title)
-    ax.legend((rects1, rects2), legend )
-    fig.savefig(filename, bbox_inches='tight')
+    ax.legend((rects1, rects2, rects3), legend )
+    fig.savefig("Output_Images/" + filename, bbox_inches='tight')
+    print("\nChart generated and saved as: " + filename)
+
     # plot.show()
 # Creation of the actual interface, using authentication
 api = tweepy.API(auth)
