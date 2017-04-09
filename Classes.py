@@ -8,10 +8,11 @@
 
 class TwitterAccount(object):
 
-    def __init__(self, username, realname, followers):
+    def __init__(self, username, realname, followers, description):
         self.username = username
         self.realname = realname
         self.followers = followers
+        self.description = description
         self.tweets = []
         self.associatedUsers = {}
 

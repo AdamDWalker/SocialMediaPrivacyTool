@@ -57,10 +57,14 @@ else:
     include_retweets = False
     print("/nInvalid input, defaulting to no")
 
-account = Classes.TwitterAccount(user.screen_name, user.name, user.followers_count)
+account = Classes.TwitterAccount(user.screen_name, user.name, user.followers_count, user.description)
 
+print("\n#===================================================#\n")
 print("Username: " + account.username + " --- Name: " + account.realname)
-print("Follower Count: " + str(account.followers) + "\n\n")
+print("Follower Count: " + str(account.followers))
+print("Description: " + account.description)
+print("\n#===================================================#\n\n")
+
 
 # Retrieve stuff (Everything basically) from the user_timeline
 #stuff = api.user_timeline(screen_name = user.screen_name, count = 200, include_rts = True)
