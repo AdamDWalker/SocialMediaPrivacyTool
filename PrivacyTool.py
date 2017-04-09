@@ -2,7 +2,7 @@
     File Name: PrivacyTool.py
     Author: Adam Walker
     Date Created: 20/02/2017
-    Date Last Modified: 08/04/2017
+    Date Last Modified: 09/04/2017
     Python Version: 3.6.0
 '''
 
@@ -11,6 +11,7 @@ import Classes
 import TweetAnalysis
 import calendar
 import matplotlib.pyplot as plot
+import numpy as np
 from collections import Counter
 
 # Consumer keys and access tokens, used for OAuth
@@ -24,7 +25,7 @@ auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
 
 def generatePieChart(n, data, labels, explode, title, filename):
-    fig = plot.figure(n, figsize=(6, 6))
+    fig = plot.figure(n)
     ax = plot.axes([0.1, 0.1, 0.8, 0.8])
 
     ax.pie(data, explode, labels, autopct='%1.1f%%',
@@ -34,6 +35,26 @@ def generatePieChart(n, data, labels, explode, title, filename):
     fig.savefig(filename, bbox_inches='tight')
     print("\nChart generated and saved as: " + filename)
 
+def generateBarChart(n, data1, data2, labels, legend, y_label, x_label, title, filename):
+    index = np.arange(len(labels))
+    bar_width = 0.4
+
+    fig = plot.figure(n, figsize=(6, 6))
+    ax = plot.axes([0.1, 0.1, 0.8, 0.8])
+
+    rects1 = ax.bar(index, data1, bar_width, alpha=0.8)
+    rects2 = ax.bar(index + bar_width, data2, bar_width, alpha=0.8)
+
+    ax.set_xticks(index + bar_width)
+    ax.set_xticklabels(labels)
+
+    ax.set_ylabel(y_label)
+    ax.set_xlabel(x_label)
+
+    ax.set_title(title)
+    ax.legend((rects1, rects2), legend )
+    fig.savefig(filename, bbox_inches='tight')
+    # plot.show()
 # Creation of the actual interface, using authentication
 api = tweepy.API(auth)
 
@@ -97,6 +118,8 @@ totalNeg = 0
 locationCount = 0
 
 daysCount = [0, 0, 0, 0, 0, 0, 0]
+posDays = [0, 0, 0, 0, 0, 0, 0]
+negDays = [0, 0, 0, 0, 0, 0, 0]
 
 for tweet in account.tweets:
     users = TweetAnalysis.extractUsernames(tweet.text)
@@ -122,18 +145,46 @@ for tweet in account.tweets:
         locationCount += 1
 
     if(tweet.day == 'Monday'):
+        if(tweet.sentiment > 0):
+            posDays[0] += 1
+        elif(tweet.sentiment < 0):
+            negDays[0] += 1
         daysCount[0] += 1
     elif(tweet.day == 'Tuesday'):
+        if(tweet.sentiment > 0):
+            posDays[1] += 1
+        elif(tweet.sentiment < 0):
+            negDays[1] += 1
         daysCount[1] += 1
     elif(tweet.day == 'Wednesday'):
+        if(tweet.sentiment > 0):
+            posDays[2] += 1
+        elif(tweet.sentiment < 0):
+            negDays[2] += 1
         daysCount[2] += 1
     elif(tweet.day == 'Thursday'):
+        if(tweet.sentiment > 0):
+            posDays[3] += 1
+        elif(tweet.sentiment < 0):
+            negDays[3] += 1
         daysCount[3] += 1
     elif(tweet.day == 'Friday'):
+        if(tweet.sentiment > 0):
+            posDays[4] += 1
+        elif(tweet.sentiment < 0):
+            negDays[4] += 1
         daysCount[4] += 1
     elif(tweet.day == 'Saturday'):
+        if(tweet.sentiment > 0):
+            posDays[5] += 1
+        elif(tweet.sentiment < 0):
+            negDays[5] += 1
         daysCount[5] += 1
     elif(tweet.day == 'Sunday'):
+        if(tweet.sentiment > 0):
+            posDays[6] += 1
+        elif(tweet.sentiment < 0):
+            negDays[6] += 1
         daysCount[6] += 1
 
 d = Counter(account.associatedUsers)
@@ -155,9 +206,10 @@ print("Total Negative: " + str(totalNeg) + "  |  Percentage: " + str(negPercent)
 print ("\nTotal location enabled tweets: " + str(locationCount) + "  |  Percentage: " + str(locationPercent))
 
 labels = ["Positive", "Negative", "Neutral"]
-dataVals = [totalPos, totalNeg, totalNeu]
+data = [totalPos, totalNeg, totalNeu]
 title = "Tweet sentiment percentages for user: " + str(account.username)
 
+# Dynamically adjust the exploded element of the pie chart to be the largest section
 if(posPercent > negPercent and posPercent > neuPercent):
     explode = [0.1, 0, 0]
 elif(negPercent > posPercent and negPercent > neuPercent):
@@ -165,13 +217,20 @@ elif(negPercent > posPercent and negPercent > neuPercent):
 else:
     explode = [0, 0, 0.1]
 
-generatePieChart(1, dataVals, labels, explode, title, "TweetSentiments.png")
+# The number is for uniquely identifying the chart figure so it doesn't add new charts over old ones
+generatePieChart(1, data, labels, explode, title, "TweetSentiments.png")
 
-days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
-title = "Most common days for tweeting"
-explodie = [0, 0, 0, 0, 0, 0, 0]
+labels = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+title = "Tweet count by day for: " + account.realname
+explode = [0, 0, 0, 0, 0, 0, 0]
 
-generatePieChart(2, daysCount, days, explodie, title, "DayCount.png")
+generatePieChart(2, daysCount, labels, explode, title, "DayCount.png")
+
+days = ["Mon", "Tue", "Wed", "Thur", "Fri", "Sat", "Sun"]
+index = np.arange(len(labels))
+legend = ['Positive Tweets', 'Negative Tweets']
+
+generateBarChart(3, posDays, negDays, days, legend, "Tweets", "Days", "Tweet sentiment by day - " + account.realname, "SentimentByDay.png")
 
 ## This function is to take various pieces of data collected and
 ## log them out into a text file that can be used for other things
