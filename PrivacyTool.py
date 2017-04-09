@@ -35,15 +35,16 @@ def generatePieChart(n, data, labels, explode, title, filename):
     fig.savefig("Output_Images/" + filename, bbox_inches='tight')
     print("\nChart generated and saved as: " + filename)
 
-def generateBarChart(n, data1, data2, labels, legend, y_label, x_label, title, filename):
+def generateBarChart(n, data1, data2, data3, labels, legend, y_label, x_label, title, filename):
     index = np.arange(len(labels))
-    bar_width = 0.4
+    bar_width = 0.3
 
     fig = plot.figure(n, figsize=(6, 6))
-    ax = plot.axes([0.1, 0.1, 0.8, 0.8])
+    ax = fig.add_subplot(111)
 
     rects1 = ax.bar(index, data1, bar_width, alpha=0.8)
     rects2 = ax.bar(index + bar_width, data2, bar_width, alpha=0.8)
+    rects3 = ax.bar(index + bar_width * 2, data3, bar_width, alpha=0.8)
 
     ax.set_xticks(index + bar_width)
     ax.set_xticklabels(labels)
@@ -122,6 +123,7 @@ locationCount = 0
 daysCount = [0, 0, 0, 0, 0, 0, 0]
 posDays = [0, 0, 0, 0, 0, 0, 0]
 negDays = [0, 0, 0, 0, 0, 0, 0]
+neuDays = [0, 0, 0, 0, 0, 0, 0]
 
 for tweet in account.tweets:
     users = TweetAnalysis.extractUsernames(tweet.text)
@@ -151,42 +153,56 @@ for tweet in account.tweets:
             posDays[0] += 1
         elif(tweet.sentiment < 0):
             negDays[0] += 1
+        else:
+            neuDays[0] += 1
         daysCount[0] += 1
     elif(tweet.day == 'Tuesday'):
         if(tweet.sentiment > 0):
             posDays[1] += 1
         elif(tweet.sentiment < 0):
             negDays[1] += 1
+        else:
+            neuDays[1] += 1
         daysCount[1] += 1
     elif(tweet.day == 'Wednesday'):
         if(tweet.sentiment > 0):
             posDays[2] += 1
         elif(tweet.sentiment < 0):
             negDays[2] += 1
+        else:
+            neuDays[2] += 1
         daysCount[2] += 1
     elif(tweet.day == 'Thursday'):
         if(tweet.sentiment > 0):
             posDays[3] += 1
         elif(tweet.sentiment < 0):
             negDays[3] += 1
+        else:
+            neuDays[3] += 1
         daysCount[3] += 1
     elif(tweet.day == 'Friday'):
         if(tweet.sentiment > 0):
             posDays[4] += 1
         elif(tweet.sentiment < 0):
             negDays[4] += 1
+        else:
+            neuDays[4] += 1
         daysCount[4] += 1
     elif(tweet.day == 'Saturday'):
         if(tweet.sentiment > 0):
             posDays[5] += 1
         elif(tweet.sentiment < 0):
             negDays[5] += 1
+        else:
+            neuDays[5] += 1
         daysCount[5] += 1
     elif(tweet.day == 'Sunday'):
         if(tweet.sentiment > 0):
             posDays[6] += 1
         elif(tweet.sentiment < 0):
             negDays[6] += 1
+        else:
+            neuDays[6] += 1
         daysCount[6] += 1
 
 d = Counter(account.associatedUsers)
@@ -209,7 +225,7 @@ print ("\nTotal location enabled tweets: " + str(locationCount) + "  |  Percenta
 
 labels = ["Positive", "Negative", "Neutral"]
 data = [totalPos, totalNeg, totalNeu]
-title = "Tweet sentiment percentages for user: " + str(account.username)
+title = "Tweet sentiment percentages for: " + str(account.realname)
 
 # Dynamically adjust the exploded element of the pie chart to be the largest section
 if(posPercent > negPercent and posPercent > neuPercent):
@@ -230,9 +246,9 @@ generatePieChart(2, daysCount, labels, explode, title, "DayCount.png")
 
 days = ["Mon", "Tue", "Wed", "Thur", "Fri", "Sat", "Sun"]
 index = np.arange(len(labels))
-legend = ['Positive Tweets', 'Negative Tweets']
+legend = ['Positive Tweets', 'Negative Tweets', 'Neutral Tweets']
 
-generateBarChart(3, posDays, negDays, days, legend, "Tweets", "Days", "Tweet sentiment by day - " + account.realname, "SentimentByDay.png")
+generateBarChart(3, posDays, negDays, neuDays, days, legend, "Tweets", "Days", "Tweet sentiment by day - " + account.realname, "SentimentByDay.png")
 
 ## This function is to take various pieces of data collected and
 ## log them out into a text file that can be used for other things
