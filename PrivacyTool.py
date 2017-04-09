@@ -9,6 +9,7 @@
 import tweepy
 import Classes
 import TweetAnalysis
+import calendar
 import matplotlib.pyplot as plot
 from collections import Counter
 
@@ -80,6 +81,7 @@ for page in tweepy.Cursor(api.user_timeline, id = user.screen_name, count = 200,
 for page in page_list:
     for status in page:
         tweet = Classes.Tweet(status.text, status.created_at, status.coordinates)
+        tweet.day = calendar.day_name[tweet.date.weekday()]
         if(tweet.coordinates != None):
             tweet.long = tweet.coordinates.get('coordinates', None)[0]
             tweet.lat = tweet.coordinates.get('coordinates', None)[1]
@@ -148,6 +150,8 @@ else:
 
 generatePieChart(data, labels, explode, title, "TweetSentiments.png")
 
+
+
 ## This function is to take various pieces of data collected and
 ## log them out into a text file that can be used for other things
 ## == Ideally this should be shortened to just logging and no analysis, and also moved to the start of the code/another file == ##
@@ -157,7 +161,7 @@ def generateLogFile():
 # Print each tweet and it's timestamp into a log file, with a line break every 25 for easier readability
     count = 1
     for tweet in account.tweets:
-        logfile.write("|Tweet " + str(count) + "| " + tweet.text + "   ==   |Time| - " + tweet.date.strftime('%d/%m/%y -- %H:%M ~#~\n'))
+        logfile.write("|Tweet " + str(count) + "| " + tweet.text + "   ==   |Time| - " + tweet.date.strftime("%d/%m/%y -- %H:%M  ==  |Day| " + tweet.day + " ~#~\n"))
         logfile.write("\tSentiment: " + str(tweet.sentiment) + "  ==  |Coords| " + str(tweet.coordinates) + "  ==  |Location| " + tweet.location + "\n")
         if count % 25 == 0:
             logfile.write("\n\n")
