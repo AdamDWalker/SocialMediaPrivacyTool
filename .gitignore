@@ -2,5 +2,6 @@
 *.txt
 !requirements.txt
 *.png
+/Output_Images
 
 __pycache__
