@@ -23,11 +23,11 @@ access_token_secret = 'Fu6m7teENyTVs92mWUt0UKriZun1vC3Ny5o1WkwpWlM8f'
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
 
-def generatePieChart(data, labels, explode, title, filename):
-    fig = plot.figure(1, figsize=(6, 6))
+def generatePieChart(n, data, labels, explode, title, filename):
+    fig = plot.figure(n, figsize=(6, 6))
     ax = plot.axes([0.1, 0.1, 0.8, 0.8])
 
-    ax.pie(data, explode=explode, labels=labels, autopct='%1.1f%%',
+    ax.pie(data, explode, labels, autopct='%1.1f%%',
             shadow=False, startangle=90)
     ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
     ax.set_title(title)
@@ -96,6 +96,8 @@ totalNeu = 0
 totalNeg = 0
 locationCount = 0
 
+daysCount = [0, 0, 0, 0, 0, 0, 0]
+
 for tweet in account.tweets:
     users = TweetAnalysis.extractUsernames(tweet.text)
 
@@ -119,6 +121,21 @@ for tweet in account.tweets:
     if(tweet.coordinates != None):
         locationCount += 1
 
+    if(tweet.day == 'Monday'):
+        daysCount[0] += 1
+    elif(tweet.day == 'Tuesday'):
+        daysCount[1] += 1
+    elif(tweet.day == 'Wednesday'):
+        daysCount[2] += 1
+    elif(tweet.day == 'Thursday'):
+        daysCount[3] += 1
+    elif(tweet.day == 'Friday'):
+        daysCount[4] += 1
+    elif(tweet.day == 'Saturday'):
+        daysCount[5] += 1
+    elif(tweet.day == 'Sunday'):
+        daysCount[6] += 1
+
 d = Counter(account.associatedUsers)
 d.most_common()
 print("Top 3 most tweeted to users by: " + str(account.realname))
@@ -138,7 +155,7 @@ print("Total Negative: " + str(totalNeg) + "  |  Percentage: " + str(negPercent)
 print ("\nTotal location enabled tweets: " + str(locationCount) + "  |  Percentage: " + str(locationPercent))
 
 labels = ["Positive", "Negative", "Neutral"]
-data = [totalPos, totalNeg, totalNeu]
+dataVals = [totalPos, totalNeg, totalNeu]
 title = "Tweet sentiment percentages for user: " + str(account.username)
 
 if(posPercent > negPercent and posPercent > neuPercent):
@@ -148,9 +165,13 @@ elif(negPercent > posPercent and negPercent > neuPercent):
 else:
     explode = [0, 0, 0.1]
 
-generatePieChart(data, labels, explode, title, "TweetSentiments.png")
+generatePieChart(1, dataVals, labels, explode, title, "TweetSentiments.png")
 
+days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+title = "Most common days for tweeting"
+explodie = [0, 0, 0, 0, 0, 0, 0]
 
+generatePieChart(2, daysCount, days, explodie, title, "DayCount.png")
 
 ## This function is to take various pieces of data collected and
 ## log them out into a text file that can be used for other things
