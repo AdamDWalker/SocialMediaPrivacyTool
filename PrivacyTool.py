@@ -25,6 +25,7 @@ def generateLogFile():
     for tweet in account.tweets:
         logfile.write("|Tweet " + str(count) + "| " + tweet.text + "   ==   |Time| - " + tweet.date.strftime("%d/%m/%y -- %H:%M  ==  |Day| " + tweet.day + " ~#~\n"))
         logfile.write("\tSentiment: " + str(tweet.sentiment) + "  ==  |Coords| " + str(tweet.coordinates) + "  ==  |Location| " + tweet.location + "\n")
+        # logfile.write("\tEntities: " + str(tweet.entities))
         if count % 25 == 0:
             logfile.write("\n\n")
         count = count+1
@@ -127,6 +128,10 @@ for tweet in account.tweets:
 
     if(tweet.isRT == True):
         RTCount += 1
+
+    tokens = TweetAnalysis.getTokens(tweet.text)
+    tagged = TweetAnalysis.getTags(tokens)
+    tweet.entities = TweetAnalysis.getEntities(tagged)
 
     if (val > 0):
         totalPos += 1
@@ -242,4 +247,5 @@ legend = ['Positive Tweets', 'Negative Tweets', 'Neutral Tweets']
 Charts.generateBarChart(3, posDays, negDays, neuDays, days, legend, "Tweets", "Days", "Tweet sentiment by day - " + account.realname, "SentimentByDay.png")
 
 generateLogFile()
+
 print("\nProgram complete. Please see output file for details.")

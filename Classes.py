@@ -28,3 +28,4 @@ class Tweet(object):
         self.location = "N/A"
         self.sentiment = 0 # This represents whether the tweet is positive/neutral/negative via 1/0/-1
         self.day = "N/A"
+        self.entities = None
