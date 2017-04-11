@@ -2,7 +2,7 @@
     File Name: PrivacyTool.py
     Author: Adam Walker
     Date Created: 20/02/2017
-    Date Last Modified: 09/04/2017
+    Date Last Modified: 11/04/2017
     Python Version: 3.6.0
 '''
 
@@ -12,6 +12,24 @@ import TweetAnalysis
 import Charts
 import calendar
 from collections import Counter
+
+
+## This function is to take various pieces of data collected and
+## log them out into a text file that can be used for other things
+## == Ideally this should be shortened to just logging and no analysis, and also moved to the start of the code/another file == ##
+def generateLogFile():
+    logfile = open("Output_Log.txt", "w")
+
+# Print each tweet and it's timestamp into a log file, with a line break every 25 for easier readability
+    count = 1
+    for tweet in account.tweets:
+        logfile.write("|Tweet " + str(count) + "| " + tweet.text + "   ==   |Time| - " + tweet.date.strftime("%d/%m/%y -- %H:%M  ==  |Day| " + tweet.day + " ~#~\n"))
+        logfile.write("\tSentiment: " + str(tweet.sentiment) + "  ==  |Coords| " + str(tweet.coordinates) + "  ==  |Location| " + tweet.location + "\n")
+        if count % 25 == 0:
+            logfile.write("\n\n")
+        count = count+1
+
+    logfile.close()
 
 # Consumer keys and access tokens, used for OAuth
 consumer_key = 'YUOKTebHRQH1MUv3ZlIZ3SKM3'
@@ -214,23 +232,6 @@ days = ["Mon", "Tue", "Wed", "Thur", "Fri", "Sat", "Sun"]
 legend = ['Positive Tweets', 'Negative Tweets', 'Neutral Tweets']
 
 Charts.generateBarChart(3, posDays, negDays, neuDays, days, legend, "Tweets", "Days", "Tweet sentiment by day - " + account.realname, "SentimentByDay.png")
-
-## This function is to take various pieces of data collected and
-## log them out into a text file that can be used for other things
-## == Ideally this should be shortened to just logging and no analysis, and also moved to the start of the code/another file == ##
-def generateLogFile():
-    logfile = open("Output_Log.txt", "w")
-
-# Print each tweet and it's timestamp into a log file, with a line break every 25 for easier readability
-    count = 1
-    for tweet in account.tweets:
-        logfile.write("|Tweet " + str(count) + "| " + tweet.text + "   ==   |Time| - " + tweet.date.strftime("%d/%m/%y -- %H:%M  ==  |Day| " + tweet.day + " ~#~\n"))
-        logfile.write("\tSentiment: " + str(tweet.sentiment) + "  ==  |Coords| " + str(tweet.coordinates) + "  ==  |Location| " + tweet.location + "\n")
-        if count % 25 == 0:
-            logfile.write("\n\n")
-        count = count+1
-
-    logfile.close()
 
 generateLogFile()
 print("\nProgram complete. Please see output file for details.")
