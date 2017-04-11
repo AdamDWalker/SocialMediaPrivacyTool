@@ -5,10 +5,14 @@
     Date Last Modified: 11/04/2017
     Python Version: 3.6.0
 '''
-
+import os
 import matplotlib.pyplot as plot
 import numpy as np
 
+def create_directory(filepath):
+    dir = os.path.dirname(filepath)
+    if not os.path.exists(dir):
+        os.makedirs(dir)
 
 def generatePieChart(n, data, labels, explode, title, filename):
     fig = plot.figure(n)
@@ -18,6 +22,7 @@ def generatePieChart(n, data, labels, explode, title, filename):
             shadow=False, startangle=90)
     ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
     ax.set_title(title)
+    create_directory("Output_Images/")
     fig.savefig("Output_Images/" + filename, bbox_inches='tight')
     print("\nChart generated and saved as: " + filename)
 
@@ -40,5 +45,6 @@ def generateBarChart(n, data1, data2, data3, labels, legend, y_label, x_label, t
 
     ax.set_title(title)
     ax.legend((rects1, rects2, rects3), legend )
+    create_directory("Output_Images/")
     fig.savefig("Output_Images/" + filename, bbox_inches='tight')
     print("\nChart generated and saved as: " + filename)
