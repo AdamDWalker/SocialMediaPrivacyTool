@@ -30,6 +30,18 @@ def getSentimentClass(sentScores):
         #print(str(val) + " [Negative]")
         return -1
 
+def getTokens(tweet):
+    tokens = nltk.word_tokenize(tweet)
+    return tokens
+
+def getTags(tokens):
+    tagged = nltk.pos_tag(tokens)
+    return tagged
+
+def getEntities(tagged):
+    entities = nltk.chunk.ne_chunk(tagged)
+    return entities
+
 ## Takes the text string of a tweet and returns an array of any usernames in that tweet
 def extractUsernames(tweet):
     twitter_username_re = re.findall(r'@([A-Za-z0-9_]+)', tweet)
