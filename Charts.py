@@ -1,5 +1,5 @@
 '''
-    File Name: PrivacyTool.py
+    File Name: Charts.py
     Author: Adam Walker
     Date Created: 11/04/2017
     Date Last Modified: 11/04/2017
