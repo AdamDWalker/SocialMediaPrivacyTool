@@ -9,9 +9,8 @@
 import tweepy
 import Classes
 import TweetAnalysis
+import Charts
 import calendar
-import matplotlib.pyplot as plot
-import numpy as np
 from collections import Counter
 
 # Consumer keys and access tokens, used for OAuth
@@ -23,39 +22,6 @@ access_token_secret = 'Fu6m7teENyTVs92mWUt0UKriZun1vC3Ny5o1WkwpWlM8f'
 # OAuth process, using the keys and tokens
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
-
-def generatePieChart(n, data, labels, explode, title, filename):
-    fig = plot.figure(n)
-    ax = plot.axes([0.1, 0.1, 0.8, 0.8])
-
-    ax.pie(data, explode, labels, autopct='%1.1f%%',
-            shadow=False, startangle=90)
-    ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-    ax.set_title(title)
-    fig.savefig("Output_Images/" + filename, bbox_inches='tight')
-    print("\nChart generated and saved as: " + filename)
-
-def generateBarChart(n, data1, data2, data3, labels, legend, y_label, x_label, title, filename):
-    index = np.arange(len(labels))
-    bar_width = 0.3
-
-    fig = plot.figure(n, figsize=(6, 6))
-    ax = fig.add_subplot(111)
-
-    rects1 = ax.bar(index, data1, bar_width, alpha=0.8)
-    rects2 = ax.bar(index + bar_width, data2, bar_width, alpha=0.8)
-    rects3 = ax.bar(index + bar_width * 2, data3, bar_width, alpha=0.8)
-
-    ax.set_xticks(index + bar_width)
-    ax.set_xticklabels(labels)
-
-    ax.set_ylabel(y_label)
-    ax.set_xlabel(x_label)
-
-    ax.set_title(title)
-    ax.legend((rects1, rects2, rects3), legend )
-    fig.savefig("Output_Images/" + filename, bbox_inches='tight')
-    print("\nChart generated and saved as: " + filename)
 
     # plot.show()
 # Creation of the actual interface, using authentication
@@ -236,19 +202,18 @@ else:
     explode = [0, 0, 0.1]
 
 # The number is for uniquely identifying the chart figure so it doesn't add new charts over old ones
-generatePieChart(1, data, labels, explode, title, "TweetSentiments.png")
+Charts.generatePieChart(1, data, labels, explode, title, "TweetSentiments.png")
 
 labels = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
 title = "Tweet count by day for: " + account.realname
 explode = [0, 0, 0, 0, 0, 0, 0]
 
-generatePieChart(2, daysCount, labels, explode, title, "DayCount.png")
+Charts.generatePieChart(2, daysCount, labels, explode, title, "DayCount.png")
 
 days = ["Mon", "Tue", "Wed", "Thur", "Fri", "Sat", "Sun"]
-index = np.arange(len(labels))
 legend = ['Positive Tweets', 'Negative Tweets', 'Neutral Tweets']
 
-generateBarChart(3, posDays, negDays, neuDays, days, legend, "Tweets", "Days", "Tweet sentiment by day - " + account.realname, "SentimentByDay.png")
+Charts.generateBarChart(3, posDays, negDays, neuDays, days, legend, "Tweets", "Days", "Tweet sentiment by day - " + account.realname, "SentimentByDay.png")
 
 ## This function is to take various pieces of data collected and
 ## log them out into a text file that can be used for other things
