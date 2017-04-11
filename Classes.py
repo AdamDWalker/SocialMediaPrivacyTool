@@ -2,7 +2,7 @@
     File Name: Classes.py
     Author: Adam Walker
     Date Created: 12/03/2017
-    Date Last Modified: 08/04/2017
+    Date Last Modified: 11/04/2017
     Python Version: 3.6.0
 '''
 
@@ -22,6 +22,7 @@ class Tweet(object):
         self.text = text
         self.date = date
         self.coordinates = coordinates
+        self.isRT = False
         self.lat = 0.0
         self.long = 0.0
         self.location = "N/A"

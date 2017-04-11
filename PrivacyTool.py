@@ -89,6 +89,8 @@ for page in tweepy.Cursor(api.user_timeline, id = user.screen_name, count = 200,
 for page in page_list:
     for status in page:
         tweet = Classes.Tweet(status.text, status.created_at, status.coordinates)
+        if(tweet.text[0] == "R" and tweet.text[1] == "T"):
+            tweet.isRT = True
         tweet.day = calendar.day_name[tweet.date.weekday()]
         if(tweet.coordinates != None):
             tweet.long = tweet.coordinates.get('coordinates', None)[0]
@@ -109,6 +111,8 @@ posDays = [0, 0, 0, 0, 0, 0, 0]
 negDays = [0, 0, 0, 0, 0, 0, 0]
 neuDays = [0, 0, 0, 0, 0, 0, 0]
 
+RTCount = 0
+
 for tweet in account.tweets:
     users = TweetAnalysis.extractUsernames(tweet.text)
 
@@ -120,6 +124,9 @@ for tweet in account.tweets:
 
     vs = TweetAnalysis.getSentimentScores(tweet.text)
     val = TweetAnalysis.getSentimentClass(vs)
+
+    if(tweet.isRT == True):
+        RTCount += 1
 
     if (val > 0):
         totalPos += 1
@@ -196,12 +203,13 @@ for k, v in d.most_common(3):
     print ('%s: %i' % (k, v))
 
 tweetCount = len(account.tweets)
+RTPercent = float("{0:.2f}".format((RTCount / tweetCount) * 100))
 posPercent = float("{0:.2f}".format((totalPos / tweetCount) * 100))
 neuPercent = float("{0:.2f}".format((totalNeu / tweetCount) * 100))
 negPercent = float("{0:.2f}".format((totalNeg / tweetCount) * 100))
 locationPercent = float("{0:.2f}".format((locationCount / tweetCount) * 100))
 
-print("\nTweet count: " + str(len(account.tweets)))
+print("\nTweet count: " + str(len(account.tweets)) + "  |  RTs: " + str(RTCount) + "  |  Percentage: " + str(RTPercent))
 print("Total Positive: " + str(totalPos) + "  |  Percentage: " + str(posPercent))
 print("Total Neutral: " + str(totalNeu) + "  |  Percentage: " + str(neuPercent))
 print("Total Negative: " + str(totalNeg) + "  |  Percentage: " + str(negPercent))
