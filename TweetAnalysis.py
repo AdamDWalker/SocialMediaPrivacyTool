@@ -49,6 +49,12 @@ def extractUsernames(tweet):
     #     print(twitter_username_re)
     return twitter_username_re
 
+def extractHashtags(tweet):
+    hashtags = re.findall(r'#([A-Za-z0-9]+)', tweet)
+    # if(len(twitter_username_re) != 0):
+    #     print(twitter_username_re)
+    return hashtags
+
 ## Take lat and long, convert to a string for the function format and return the address from a reverse lookup
 def GetAddressFromCoords(lat, long):
     coords = str(lat) + ", " + str(long)

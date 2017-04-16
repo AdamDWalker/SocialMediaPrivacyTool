@@ -25,6 +25,7 @@ def generateLogFile():
     for tweet in account.tweets:
         logfile.write("|Tweet " + str(count) + "| " + tweet.text + "   ==   |Time| - " + tweet.date.strftime("%d/%m/%y -- %H:%M  ==  |Day| " + tweet.day + " ~#~\n"))
         logfile.write("\tSentiment: " + str(tweet.sentiment) + "  ==  |Coords| " + str(tweet.coordinates) + "  ==  |Location| " + tweet.location + "\n")
+        logfile.write("\tHashtags: " + str(tweet.hashtags) + "\n")
         # logfile.write("\tEntities: " + str(tweet.entities))
         if count % 25 == 0:
             logfile.write("\n\n")
@@ -116,6 +117,7 @@ RTCount = 0
 
 for tweet in account.tweets:
     users = TweetAnalysis.extractUsernames(tweet.text)
+    tweet.hashtags = TweetAnalysis.extractHashtags(tweet.text)
 
     for user in users:
         if (user in account.associatedUsers):
