@@ -76,178 +76,184 @@ print("Follower Count: " + str(account.followers))
 print("Description: " + account.description)
 print("\n#===================================================#\n\n")
 
+if (user.protected == False):
 
-# Retrieve stuff (Everything basically) from the user_timeline
-#stuff = api.user_timeline(screen_name = user.screen_name, count = 200, include_rts = True)
+    # Retrieve stuff (Everything basically) from the user_timeline
+    #stuff = api.user_timeline(screen_name = user.screen_name, count = 200, include_rts = True)
 
-page_list = []
-n = 0
+    page_list = []
+    n = 0
 
-for page in tweepy.Cursor(api.user_timeline, id = user.screen_name, count = 200, include_rts = include_retweets).pages(32):
-    page_list.append(page)
-    n = n+1
-    print(n)
+    for page in tweepy.Cursor(api.user_timeline, id = user.screen_name, count = 200, include_rts = include_retweets).pages(32):
+        page_list.append(page)
+        n = n+1
+        print(n)
 
-for page in page_list:
-    for status in page:
-        tweet = Classes.Tweet(status.text, status.created_at, status.coordinates)
-        if(tweet.text[0] == "R" and tweet.text[1] == "T"):
-            tweet.isRT = True
-        tweet.day = calendar.day_name[tweet.date.weekday()]
+    for page in page_list:
+        for status in page:
+            tweet = Classes.Tweet(status.text, status.created_at, status.coordinates)
+            if(tweet.text[0] == "R" and tweet.text[1] == "T"):
+                tweet.isRT = True
+            tweet.day = calendar.day_name[tweet.date.weekday()]
+            if(tweet.coordinates != None):
+                tweet.long = tweet.coordinates.get('coordinates', None)[0]
+                tweet.lat = tweet.coordinates.get('coordinates', None)[1]
+                tweet.location = TweetAnalysis.GetAddressFromCoords(tweet.lat, tweet.long)
+                #print(str(tweet.coordinates.get('coordinates', 'No available data')[0]))
+            account.tweets.append(tweet)
+
+    print("\nExtracted: " + str(len(account.tweets)) + " tweets.\n")
+
+    totalPos = 0
+    totalNeu = 0
+    totalNeg = 0
+    locationCount = 0
+
+    daysCount = [0, 0, 0, 0, 0, 0, 0]
+    posDays = [0, 0, 0, 0, 0, 0, 0]
+    negDays = [0, 0, 0, 0, 0, 0, 0]
+    neuDays = [0, 0, 0, 0, 0, 0, 0]
+
+    RTCount = 0
+
+    for tweet in account.tweets:
+        users = TweetAnalysis.extractUsernames(tweet.text)
+        tweet.hashtags = TweetAnalysis.extractHashtags(tweet.text)
+
+        for user in users:
+            if (user in account.associatedUsers):
+                account.associatedUsers[user] += 1
+            else:
+                account.associatedUsers[user] = 1
+
+        vs = TweetAnalysis.getSentimentScores(tweet.text)
+        val = TweetAnalysis.getSentimentClass(vs)
+
+        if(tweet.isRT == True):
+            RTCount += 1
+
+        tokens = TweetAnalysis.getTokens(tweet.text)
+        tagged = TweetAnalysis.getTags(tokens)
+        tweet.entities = TweetAnalysis.getEntities(tagged)
+
+        if (val > 0):
+            totalPos += 1
+        elif (val == 0):
+            totalNeu += 1
+        else:
+            totalNeg += 1
+        tweet.sentiment = list(vs.values())[3]
+
         if(tweet.coordinates != None):
-            tweet.long = tweet.coordinates.get('coordinates', None)[0]
-            tweet.lat = tweet.coordinates.get('coordinates', None)[1]
-            tweet.location = TweetAnalysis.GetAddressFromCoords(tweet.lat, tweet.long)
-            #print(str(tweet.coordinates.get('coordinates', 'No available data')[0]))
-        account.tweets.append(tweet)
+            locationCount += 1
 
-print("\nExtracted: " + str(len(account.tweets)) + " tweets.\n")
+        if(tweet.day == 'Monday'):
+            if(tweet.sentiment > 0):
+                posDays[0] += 1
+            elif(tweet.sentiment < 0):
+                negDays[0] += 1
+            else:
+                neuDays[0] += 1
+            daysCount[0] += 1
+        elif(tweet.day == 'Tuesday'):
+            if(tweet.sentiment > 0):
+                posDays[1] += 1
+            elif(tweet.sentiment < 0):
+                negDays[1] += 1
+            else:
+                neuDays[1] += 1
+            daysCount[1] += 1
+        elif(tweet.day == 'Wednesday'):
+            if(tweet.sentiment > 0):
+                posDays[2] += 1
+            elif(tweet.sentiment < 0):
+                negDays[2] += 1
+            else:
+                neuDays[2] += 1
+            daysCount[2] += 1
+        elif(tweet.day == 'Thursday'):
+            if(tweet.sentiment > 0):
+                posDays[3] += 1
+            elif(tweet.sentiment < 0):
+                negDays[3] += 1
+            else:
+                neuDays[3] += 1
+            daysCount[3] += 1
+        elif(tweet.day == 'Friday'):
+            if(tweet.sentiment > 0):
+                posDays[4] += 1
+            elif(tweet.sentiment < 0):
+                negDays[4] += 1
+            else:
+                neuDays[4] += 1
+            daysCount[4] += 1
+        elif(tweet.day == 'Saturday'):
+            if(tweet.sentiment > 0):
+                posDays[5] += 1
+            elif(tweet.sentiment < 0):
+                negDays[5] += 1
+            else:
+                neuDays[5] += 1
+            daysCount[5] += 1
+        elif(tweet.day == 'Sunday'):
+            if(tweet.sentiment > 0):
+                posDays[6] += 1
+            elif(tweet.sentiment < 0):
+                negDays[6] += 1
+            else:
+                neuDays[6] += 1
+            daysCount[6] += 1
 
-totalPos = 0
-totalNeu = 0
-totalNeg = 0
-locationCount = 0
+    d = Counter(account.associatedUsers)
+    d.most_common()
+    print("Top 3 most tweeted to users by: " + str(account.realname))
+    for k, v in d.most_common(3):
+        print ('%s: %i' % (k, v))
 
-daysCount = [0, 0, 0, 0, 0, 0, 0]
-posDays = [0, 0, 0, 0, 0, 0, 0]
-negDays = [0, 0, 0, 0, 0, 0, 0]
-neuDays = [0, 0, 0, 0, 0, 0, 0]
+    tweetCount = len(account.tweets)
+    RTPercent = float("{0:.2f}".format((RTCount / tweetCount) * 100))
+    posPercent = float("{0:.2f}".format((totalPos / tweetCount) * 100))
+    neuPercent = float("{0:.2f}".format((totalNeu / tweetCount) * 100))
+    negPercent = float("{0:.2f}".format((totalNeg / tweetCount) * 100))
+    locationPercent = float("{0:.2f}".format((locationCount / tweetCount) * 100))
 
-RTCount = 0
+    print("\nTweet count: " + str(len(account.tweets)) + "  |  RTs: " + str(RTCount) + "  |  Percentage: " + str(RTPercent))
+    print("Total Positive: " + str(totalPos) + "  |  Percentage: " + str(posPercent))
+    print("Total Neutral: " + str(totalNeu) + "  |  Percentage: " + str(neuPercent))
+    print("Total Negative: " + str(totalNeg) + "  |  Percentage: " + str(negPercent))
+    print ("\nTotal location enabled tweets: " + str(locationCount) + "  |  Percentage: " + str(locationPercent))
 
-for tweet in account.tweets:
-    users = TweetAnalysis.extractUsernames(tweet.text)
-    tweet.hashtags = TweetAnalysis.extractHashtags(tweet.text)
+    labels = ["Positive", "Negative", "Neutral"]
+    data = [totalPos, totalNeg, totalNeu]
+    title = "Tweet sentiment percentages for: " + str(account.realname)
 
-    for user in users:
-        if (user in account.associatedUsers):
-            account.associatedUsers[user] += 1
-        else:
-            account.associatedUsers[user] = 1
-
-    vs = TweetAnalysis.getSentimentScores(tweet.text)
-    val = TweetAnalysis.getSentimentClass(vs)
-
-    if(tweet.isRT == True):
-        RTCount += 1
-
-    tokens = TweetAnalysis.getTokens(tweet.text)
-    tagged = TweetAnalysis.getTags(tokens)
-    tweet.entities = TweetAnalysis.getEntities(tagged)
-
-    if (val > 0):
-        totalPos += 1
-    elif (val == 0):
-        totalNeu += 1
+    # Dynamically adjust the exploded element of the pie chart to be the largest section
+    if(posPercent > negPercent and posPercent > neuPercent):
+        explode = [0.1, 0, 0]
+    elif(negPercent > posPercent and negPercent > neuPercent):
+        explode = [0, 0.1, 0]
     else:
-        totalNeg += 1
-    tweet.sentiment = list(vs.values())[3]
+        explode = [0, 0, 0.1]
 
-    if(tweet.coordinates != None):
-        locationCount += 1
+    # The number is for uniquely identifying the chart figure so it doesn't add new charts over old ones
+    Charts.generatePieChart(1, data, labels, explode, title, "TweetSentiments.png")
 
-    if(tweet.day == 'Monday'):
-        if(tweet.sentiment > 0):
-            posDays[0] += 1
-        elif(tweet.sentiment < 0):
-            negDays[0] += 1
-        else:
-            neuDays[0] += 1
-        daysCount[0] += 1
-    elif(tweet.day == 'Tuesday'):
-        if(tweet.sentiment > 0):
-            posDays[1] += 1
-        elif(tweet.sentiment < 0):
-            negDays[1] += 1
-        else:
-            neuDays[1] += 1
-        daysCount[1] += 1
-    elif(tweet.day == 'Wednesday'):
-        if(tweet.sentiment > 0):
-            posDays[2] += 1
-        elif(tweet.sentiment < 0):
-            negDays[2] += 1
-        else:
-            neuDays[2] += 1
-        daysCount[2] += 1
-    elif(tweet.day == 'Thursday'):
-        if(tweet.sentiment > 0):
-            posDays[3] += 1
-        elif(tweet.sentiment < 0):
-            negDays[3] += 1
-        else:
-            neuDays[3] += 1
-        daysCount[3] += 1
-    elif(tweet.day == 'Friday'):
-        if(tweet.sentiment > 0):
-            posDays[4] += 1
-        elif(tweet.sentiment < 0):
-            negDays[4] += 1
-        else:
-            neuDays[4] += 1
-        daysCount[4] += 1
-    elif(tweet.day == 'Saturday'):
-        if(tweet.sentiment > 0):
-            posDays[5] += 1
-        elif(tweet.sentiment < 0):
-            negDays[5] += 1
-        else:
-            neuDays[5] += 1
-        daysCount[5] += 1
-    elif(tweet.day == 'Sunday'):
-        if(tweet.sentiment > 0):
-            posDays[6] += 1
-        elif(tweet.sentiment < 0):
-            negDays[6] += 1
-        else:
-            neuDays[6] += 1
-        daysCount[6] += 1
+    labels = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+    title = "Tweet count by day for: " + account.realname
+    explode = [0, 0, 0, 0, 0, 0, 0]
 
-d = Counter(account.associatedUsers)
-d.most_common()
-print("Top 3 most tweeted to users by: " + str(account.realname))
-for k, v in d.most_common(3):
-    print ('%s: %i' % (k, v))
+    Charts.generatePieChart(2, daysCount, labels, explode, title, "DayCount.png")
 
-tweetCount = len(account.tweets)
-RTPercent = float("{0:.2f}".format((RTCount / tweetCount) * 100))
-posPercent = float("{0:.2f}".format((totalPos / tweetCount) * 100))
-neuPercent = float("{0:.2f}".format((totalNeu / tweetCount) * 100))
-negPercent = float("{0:.2f}".format((totalNeg / tweetCount) * 100))
-locationPercent = float("{0:.2f}".format((locationCount / tweetCount) * 100))
+    days = ["Mon", "Tue", "Wed", "Thur", "Fri", "Sat", "Sun"]
+    legend = ['Positive Tweets', 'Negative Tweets', 'Neutral Tweets']
 
-print("\nTweet count: " + str(len(account.tweets)) + "  |  RTs: " + str(RTCount) + "  |  Percentage: " + str(RTPercent))
-print("Total Positive: " + str(totalPos) + "  |  Percentage: " + str(posPercent))
-print("Total Neutral: " + str(totalNeu) + "  |  Percentage: " + str(neuPercent))
-print("Total Negative: " + str(totalNeg) + "  |  Percentage: " + str(negPercent))
-print ("\nTotal location enabled tweets: " + str(locationCount) + "  |  Percentage: " + str(locationPercent))
+    Charts.generateBarChart(3, posDays, negDays, neuDays, days, legend, "Tweets", "Days", "Tweet sentiment by day - " + account.realname, "SentimentByDay.png")
 
-labels = ["Positive", "Negative", "Neutral"]
-data = [totalPos, totalNeg, totalNeu]
-title = "Tweet sentiment percentages for: " + str(account.realname)
+    generateLogFile()
 
-# Dynamically adjust the exploded element of the pie chart to be the largest section
-if(posPercent > negPercent and posPercent > neuPercent):
-    explode = [0.1, 0, 0]
-elif(negPercent > posPercent and negPercent > neuPercent):
-    explode = [0, 0.1, 0]
+    print("\nProgram complete. Please see output file for details.")
+
 else:
-    explode = [0, 0, 0.1]
-
-# The number is for uniquely identifying the chart figure so it doesn't add new charts over old ones
-Charts.generatePieChart(1, data, labels, explode, title, "TweetSentiments.png")
-
-labels = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
-title = "Tweet count by day for: " + account.realname
-explode = [0, 0, 0, 0, 0, 0, 0]
-
-Charts.generatePieChart(2, daysCount, labels, explode, title, "DayCount.png")
-
-days = ["Mon", "Tue", "Wed", "Thur", "Fri", "Sat", "Sun"]
-legend = ['Positive Tweets', 'Negative Tweets', 'Neutral Tweets']
-
-Charts.generateBarChart(3, posDays, negDays, neuDays, days, legend, "Tweets", "Days", "Tweet sentiment by day - " + account.realname, "SentimentByDay.png")
-
-generateLogFile()
-
-print("\nProgram complete. Please see output file for details.")
+    print("#===================================================#\n")
+    print("\tError: This account is protected")
+    print("\n#===================================================#\n")
