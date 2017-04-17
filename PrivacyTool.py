@@ -33,6 +33,16 @@ def generateLogFile():
 
     logfile.close()
 
+def outputLocations():
+    locFile = open("Location_Log.txt", "w")
+
+    for tweet in account.tweets:
+        if (tweet.location != "N/A"):
+            locFile.write("|Location| - " + tweet.location + "\n")
+            locFile.write("\t|Date| - " + tweet.day + " " + tweet.date.strftime("%d/%m/%y -- %H:%M") + "\n")
+
+    locFile.close()
+
 # Consumer keys and access tokens, used for OAuth
 consumer_key = 'YUOKTebHRQH1MUv3ZlIZ3SKM3'
 consumer_secret = 'FZJtpidnF24hDL6wgTAf2Tfqa8lJj8ZaVzWLbzOAdAty7cxDFe'
@@ -247,6 +257,8 @@ if (user.protected == False):
     Charts.generateBarChart(3, posDays, negDays, neuDays, days, legend, "Tweets", "Days", "Tweet sentiment by day - " + account.realname, "SentimentByDay.png")
 
     generateLogFile()
+    if(locationCount != 0):
+        outputLocations()
 
     print("\nProgram complete. Please see output file for details.")
 
