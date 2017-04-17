@@ -2,7 +2,7 @@
     File Name: PrivacyTool.py
     Author: Adam Walker
     Date Created: 20/02/2017
-    Date Last Modified: 11/04/2017
+    Date Last Modified: 17/04/2017
     Python Version: 3.6.0
 '''
 
@@ -26,7 +26,7 @@ def generateLogFile():
         logfile.write("|Tweet " + str(count) + "| " + tweet.text + "   ==   |Time| - " + tweet.date.strftime("%d/%m/%y -- %H:%M  ==  |Day| " + tweet.day + " ~#~\n"))
         logfile.write("\tSentiment: " + str(tweet.sentiment) + "  ==  |Coords| " + str(tweet.coordinates) + "  ==  |Location| " + tweet.location + "\n")
         logfile.write("\tHashtags: " + str(tweet.hashtags) + "\n")
-        # logfile.write("\tEntities: " + str(tweet.entities))
+        logfile.write("\tEntities: " + str(tweet.entities))
         if count % 25 == 0:
             logfile.write("\n\n")
         count = count+1
@@ -77,9 +77,6 @@ print("Description: " + account.description)
 print("\n#===================================================#\n\n")
 
 if (user.protected == False):
-
-    # Retrieve stuff (Everything basically) from the user_timeline
-    #stuff = api.user_timeline(screen_name = user.screen_name, count = 200, include_rts = True)
 
     page_list = []
     n = 0
