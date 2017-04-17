@@ -25,8 +25,8 @@ def generateLogFile():
     for tweet in account.tweets:
         logfile.write("|Tweet " + str(count) + "| " + tweet.text + "   ==   |Time| - " + tweet.date.strftime("%d/%m/%y -- %H:%M  ==  |Day| " + tweet.day + " ~#~\n"))
         logfile.write("\tSentiment: " + str(tweet.sentiment) + "  ==  |Coords| " + str(tweet.coordinates) + "  ==  |Location| " + tweet.location + "\n")
-        logfile.write("\tHashtags: " + str(tweet.hashtags) + "\n")
-        logfile.write("\tEntities: " + str(tweet.entities))
+        logfile.write("\tHashtags: " + str(tweet.hashtags) + " Keywords: " + str(tweet.keywords) + "\n")
+        #logfile.write("\tEntities: " + str(tweet.entities))
         if count % 25 == 0:
             logfile.write("\n\n")
         count = count+1
@@ -142,6 +142,8 @@ if (user.protected == False):
         tokens = TweetAnalysis.getTokens(tweet.text)
         tagged = TweetAnalysis.getTags(tokens)
         tweet.entities = TweetAnalysis.getEntities(tagged)
+        tweet.keywords = TweetAnalysis.removeStopwords(tokens)
+
 
         if (val > 0):
             totalPos += 1

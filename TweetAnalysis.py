@@ -2,13 +2,14 @@
     File Name: TweetAnalysis.py
     Author: Adam Walker
     Date Created: 05/03/2017
-    Date Last Modified: 04/04/2017
+    Date Last Modified: 16/04/2017
     Python Version: 3.6.0
 '''
 
 import nltk
 import re
 from nltk.sentiment.vader import SentimentIntensityAnalyzer as vaderSentiment
+from nltk.corpus import stopwords
 from geopy.geocoders import Nominatim
 ## This function takes a sentence and returns a dictionary containing
 ## the sentiment polarity scores from the vader sentiment analyser
@@ -41,6 +42,12 @@ def getTags(tokens):
 def getEntities(tagged):
     entities = nltk.chunk.ne_chunk(tagged)
     return entities
+
+def removeStopwords(tokens):
+    stop_words = set(stopwords.words('english'))
+    stop_words.update(['.', ',', '"', "'", '?', '!', ':', ';', '(', ')', '[', ']', '{', '}'])
+    normalised = [word for word in tokens if word.lower() not in stop_words]
+    return normalised
 
 ## Takes the text string of a tweet and returns an array of any usernames in that tweet
 def extractUsernames(tweet):
