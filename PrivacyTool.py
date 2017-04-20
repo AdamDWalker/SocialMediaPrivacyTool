@@ -143,6 +143,7 @@ if (user.protected == False):
         tagged = TweetAnalysis.getTags(tokens)
         tweet.entities = TweetAnalysis.getEntities(tagged)
         tweet.keywords = TweetAnalysis.removeStopwords(tokens)
+        tweet.subject = TweetAnalysis.sentParser(tweet.text)
 
 
         if (val > 0):

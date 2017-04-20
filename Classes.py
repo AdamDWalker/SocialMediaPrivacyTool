@@ -30,4 +30,5 @@ class Tweet(object):
         self.day = "N/A"
         self.entities = None
         self.keywords = []
+        self.subject = None
         self.hashtags = []

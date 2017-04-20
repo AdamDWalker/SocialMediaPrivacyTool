@@ -51,6 +51,24 @@ def removeStopwords(tokens):
     normalised = [word for word in tokens if word.lower() not in stop_words]
     return normalised
 
+def sentParser(tweet):
+    # grammar = '''
+    #     NP: {<DT>? <JJ>* <NN>*} # NP
+    #     P: {<IN>}           # Preposition
+    #     V: {<V.*>}          # Verb
+    #     PP: {<P> <NP>}      # PP -> P NP
+    #     VP: {<V> <NP|PP>*}  # VP -> V (NP|PP)*
+    # '''
+    # cp = nltk.RegexpParser(grammar, "NP")
+    # result = cp.parse(tagged)
+    # print (result)
+
+    tweet = en_nlp(tweet)
+    sentence = next(tweet.sents)
+    for word in sentence:
+        print(word, word.dep_)
+
+
 ## Takes the text string of a tweet and returns an array of any usernames in that tweet
 def extractUsernames(tweet):
     twitter_username_re = re.findall(r'@([A-Za-z0-9_]+)', tweet)
