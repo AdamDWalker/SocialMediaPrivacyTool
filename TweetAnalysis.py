@@ -6,11 +6,13 @@
     Python Version: 3.6.0
 '''
 
-import nltk
-import re
+import nltk, re, spacy
 from nltk.sentiment.vader import SentimentIntensityAnalyzer as vaderSentiment
 from nltk.corpus import stopwords
 from geopy.geocoders import Nominatim
+
+en_nlp = spacy.load('en')
+
 ## This function takes a sentence and returns a dictionary containing
 ## the sentiment polarity scores from the vader sentiment analyser
 def getSentimentScores(sentence):
