@@ -2,7 +2,7 @@
     File Name: TweetAnalysis.py
     Author: Adam Walker
     Date Created: 05/03/2017
-    Date Last Modified: 16/04/2017
+    Date Last Modified: 17/04/2017
     Python Version: 3.6.0
 '''
 
@@ -68,13 +68,3 @@ def GetAddressFromCoords(lat, long):
     geolocator = Nominatim()
     location = geolocator.reverse(coords)
     return location.address
-
-if __name__ == '__main__':
-    with open("Output_Log.txt") as f:
-        tweets = f.read().split('~#~')
-    # you may also want to remove whitespace characters like `\n` at the end of each line
-    #tweets = [x.strip('\n') for x in content]
-
-    # tokens = nltk.word_tokenize(sentence)
-    # tagged = nltk.pos_tag(tokens)
-    # entities = nltk.chunk.ne_chunk(tagged)
