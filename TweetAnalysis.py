@@ -2,7 +2,7 @@
     File Name: TweetAnalysis.py
     Author: Adam Walker
     Date Created: 05/03/2017
-    Date Last Modified: 17/04/2017
+    Date Last Modified: 20/04/2017
     Python Version: 3.6.0
 '''
 
@@ -44,6 +44,16 @@ def getTags(tokens):
 def getEntities(tagged):
     entities = nltk.chunk.ne_chunk(tagged)
     return entities
+
+def stripPunctuation(tweet):
+    # punctuation = ['.', ',', '"', "'", '?', '!', ':', ';', '(', ')', '[', ']', '{', '}', '@']
+
+    for char in '"#?.!/;:@([])':
+        tweet = tweet.replace(char,'')
+
+    # tweet = [char for char in tweet.split() if char not in punctuation]
+    # tweet = ' '.join(tweet)
+    return tweet
 
 def removeStopwords(tokens):
     stop_words = set(stopwords.words('english'))

@@ -139,11 +139,15 @@ if (user.protected == False):
         if(tweet.isRT == True):
             RTCount += 1
 
-        tokens = TweetAnalysis.getTokens(tweet.text)
+        textTemp = TweetAnalysis.stripPunctuation(tweet.text)
+        tokens = TweetAnalysis.getTokens(textTemp)
         tagged = TweetAnalysis.getTags(tokens)
         tweet.entities = TweetAnalysis.getEntities(tagged)
         tweet.keywords = TweetAnalysis.removeStopwords(tokens)
-        tweet.subject = TweetAnalysis.sentParser(tweet.text)
+        tweet.keywords = [keyword for keyword in tweet.keywords if keyword not in account.associatedUsers]
+        tweet.keywords = [keyword for keyword in tweet.keywords if keyword not in tweet.hashtags]
+        keywords = ' '.join(tweet.keywords)
+        tweet.keywords = TweetAnalysis.sentParser(keywords)
 
 
         if (val > 0):
