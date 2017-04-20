@@ -2,7 +2,7 @@
     File Name: PrivacyTool.py
     Author: Adam Walker
     Date Created: 20/02/2017
-    Date Last Modified: 17/04/2017
+    Date Last Modified: 20/04/2017
     Python Version: 3.6.0
 '''
 
@@ -76,7 +76,7 @@ elif retweet_input == "N" or retweet_input == "n":
     include_retweets = False
 else:
     include_retweets = False
-    print("/nInvalid input, defaulting to no")
+    print("\nInvalid input, defaulting to no")
 
 account = Classes.TwitterAccount(user.screen_name, user.name, user.followers_count, user.description)
 
