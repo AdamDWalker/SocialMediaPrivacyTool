@@ -33,13 +33,16 @@ def generateLogFile():
 
     logfile.close()
 
-def outputLocations():
+def outputLocations(isEmpty):
     locFile = open("Location_Log.txt", "w")
 
-    for tweet in account.tweets:
-        if (tweet.location != "N/A"):
-            locFile.write("|Location| - " + tweet.location + "\n")
-            locFile.write("\t|Date| - " + tweet.day + " " + tweet.date.strftime("%d/%m/%y -- %H:%M") + "\n")
+    if(isEmpty):
+        locFile.write("No locations found for account: " + str(account.realname))
+    else:
+        for tweet in account.tweets:
+            if (tweet.location != "N/A"):
+                locFile.write("|Location| - " + tweet.location + "\n")
+                locFile.write("\t|Date| - " + tweet.day + " " + tweet.date.strftime("%d/%m/%y -- %H:%M") + "\n")
 
     locFile.close()
 
@@ -265,7 +268,9 @@ if (user.protected == False):
 
     generateLogFile()
     if(locationCount != 0):
-        outputLocations()
+        outputLocations(False)
+    else:
+        outputLocations(True)
 
     print("\nProgram complete. Please see output file for details.")
 
