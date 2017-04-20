@@ -6,12 +6,13 @@
     Python Version: 3.6.0
 '''
 
-import nltk, re, spacy
+import nltk, re
 from nltk.sentiment.vader import SentimentIntensityAnalyzer as vaderSentiment
 from nltk.corpus import stopwords
 from geopy.geocoders import Nominatim
+from spacy.en import English
 
-en_nlp = spacy.load('en')
+nlp = English()
 
 ## This function takes a sentence and returns a dictionary containing
 ## the sentiment polarity scores from the vader sentiment analyser
@@ -57,27 +58,23 @@ def stripPunctuation(tweet):
 
 def removeStopwords(tokens):
     stop_words = set(stopwords.words('english'))
-    stop_words.update(['.', ',', '"', "'", '?', '!', ':', ';', '(', ')', '[', ']', '{', '}'])
+    # stop_words.update(['https'])
     normalised = [word for word in tokens if word.lower() not in stop_words]
     return normalised
 
 def sentParser(tweet):
-    # grammar = '''
-    #     NP: {<DT>? <JJ>* <NN>*} # NP
-    #     P: {<IN>}           # Preposition
-    #     V: {<V.*>}          # Verb
-    #     PP: {<P> <NP>}      # PP -> P NP
-    #     VP: {<V> <NP|PP>*}  # VP -> V (NP|PP)*
-    # '''
-    # cp = nltk.RegexpParser(grammar, "NP")
-    # result = cp.parse(tagged)
-    # print (result)
 
-    tweet = en_nlp(tweet)
-    sentence = next(tweet.sents)
-    for word in sentence:
-        print(word, word.dep_)
-
+    keywords = []
+    tweet = nlp(tweet)
+    for sentence in tweet.sents:
+        for word in sentence:
+            if(word.dep_ == "ROOT"):
+                keywords.append(word)
+            elif(word.dep_ == "nsubj"):
+                keywords.append(word)
+            elif(word.dep_ == "dobj"):
+                keywords.append(word)
+    return keywords
 
 ## Takes the text string of a tweet and returns an array of any usernames in that tweet
 def extractUsernames(tweet):
