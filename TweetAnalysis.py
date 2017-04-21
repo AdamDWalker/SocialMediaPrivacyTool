@@ -53,7 +53,7 @@ def stripPunctuation(tweet):
 
 def removeStopwords(tokens):
     stop_words = set(stopwords.words('english'))
-    # stop_words.update(['https'])
+    stop_words.update(["'re", "'ve"])
     normalised = [word for word in tokens if word.lower() not in stop_words]
     return normalised
 

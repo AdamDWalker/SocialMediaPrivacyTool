@@ -8,6 +8,7 @@
 import os
 import matplotlib.pyplot as plot
 import numpy as np
+from wordcloud import WordCloud
 
 def create_directory(filepath):
     dir = os.path.dirname(filepath)
@@ -47,4 +48,21 @@ def generateBarChart(n, data1, data2, data3, labels, legend, y_label, x_label, t
     ax.legend((rects1, rects2, rects3), legend )
     create_directory("Output_Images/")
     fig.savefig("Output_Images/" + filename, bbox_inches='tight')
+    print("\nChart generated and saved as: " + filename)
+
+def generateWordcloud(words, title, filename):
+
+    # plot.imshow(wordcloud, interpolation='bilinear')
+    # plot.axis("off")
+
+    # lower max_font_size
+    wordcloud = WordCloud().generate(words)
+    plot.figure(figsize=(16,8))
+    plot.imshow(wordcloud, interpolation='bilinear')
+    plot.axis("off")
+    plot.tight_layout(pad=0)
+    plot.title(title)
+    # plot.imshow(wordcloud, interpolation="bilinear")
+    create_directory("Output_Images/")
+    plot.savefig("Output_Images/" + filename, bbox_inches='tight')
     print("\nChart generated and saved as: " + filename)
