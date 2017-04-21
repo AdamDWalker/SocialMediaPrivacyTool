@@ -146,7 +146,7 @@ if (user.protected == False):
         textTemp = TweetAnalysis.stripPunctuation(tweet.text)
         tokens = TweetAnalysis.getTokens(textTemp)
         tagged = TweetAnalysis.getTags(tokens)
-        tweet.entities = TweetAnalysis.getEntities(tagged)
+        #tweet.entities = TweetAnalysis.getEntities(tagged)
         tweet.keywords = TweetAnalysis.removeStopwords(tokens)
         tweet.keywords = [keyword for keyword in tweet.keywords if keyword not in account.associatedUsers]
         tweet.keywords = [keyword for keyword in tweet.keywords if keyword not in tweet.hashtags]
