@@ -118,6 +118,7 @@ if (user.protected == False):
     totalNeu = 0
     totalNeg = 0
     locationCount = 0
+    totalKeywords = []
 
     daysCount = [0, 0, 0, 0, 0, 0, 0]
     posDays = [0, 0, 0, 0, 0, 0, 0]
@@ -149,9 +150,9 @@ if (user.protected == False):
         tweet.keywords = TweetAnalysis.removeStopwords(tokens)
         tweet.keywords = [keyword for keyword in tweet.keywords if keyword not in account.associatedUsers]
         tweet.keywords = [keyword for keyword in tweet.keywords if keyword not in tweet.hashtags]
-        keywords = ' '.join(tweet.keywords)
-        tweet.keywords = TweetAnalysis.sentParser(keywords)
-
+        keywords = ' '.join(word for word in tweet.keywords if len(word) > 2) # Get rid of small words, since they're mostly little meaningless things that sneak through other steps anyway
+        tweet.keywords = TweetAnalysis.getKeywords(keywords)
+        totalKeywords.extend(tweet.keywords)
 
         if (val > 0):
             totalPos += 1
@@ -272,6 +273,8 @@ if (user.protected == False):
     else:
         outputLocations(True)
 
+    keywordString = ' '.join(totalKeywords)
+    Charts.generateWordcloud(keywordString, "Tweet keywords - " + account.realname, "Wordcloud.png")
     print("\nProgram complete. Please see output file for details.")
 
 else:

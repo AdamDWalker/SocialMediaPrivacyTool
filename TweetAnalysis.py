@@ -57,18 +57,17 @@ def removeStopwords(tokens):
     normalised = [word for word in tokens if word.lower() not in stop_words]
     return normalised
 
-def sentParser(tweet):
-
+def getKeywords(text):
     keywords = []
-    tweet = nlp(tweet)
-    for sentence in tweet.sents:
+    text = nlp(text)
+    for sentence in text.sents:
         for word in sentence:
             if(word.dep_ == "ROOT"):
-                keywords.append(word)
+                keywords.append(str(word))
             elif(word.dep_ == "nsubj"):
-                keywords.append(word)
+                keywords.append(str(word))
             elif(word.dep_ == "dobj"):
-                keywords.append(word)
+                keywords.append(str(word))
     return keywords
 
 ## Takes the text string of a tweet and returns an array of any usernames in that tweet
