@@ -47,13 +47,8 @@ def getEntities(tagged):
     return entities
 
 def stripPunctuation(tweet):
-    # punctuation = ['.', ',', '"', "'", '?', '!', ':', ';', '(', ')', '[', ']', '{', '}', '@']
-
     for char in '"#?.!/;:@([])':
         tweet = tweet.replace(char,'')
-
-    # tweet = [char for char in tweet.split() if char not in punctuation]
-    # tweet = ' '.join(tweet)
     return tweet
 
 def removeStopwords(tokens):
