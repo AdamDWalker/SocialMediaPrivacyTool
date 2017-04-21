@@ -2,7 +2,7 @@
     File Name: PrivacyTool.py
     Author: Adam Walker
     Date Created: 20/02/2017
-    Date Last Modified: 20/04/2017
+    Date Last Modified: 21/04/2017
     Python Version: 3.6.0
 '''
 
@@ -82,9 +82,10 @@ else:
     print("\nInvalid input, defaulting to no")
 
 account = Classes.TwitterAccount(user.screen_name, user.name, user.followers_count, user.description)
-
+account.gender = TweetAnalysis.getGender(account.realname.split(None, 1)[0])
 print("\n#===================================================#\n")
 print("Username: " + account.username + " --- Name: " + account.realname)
+print("Gender: " + account.gender)
 print("Follower Count: " + str(account.followers))
 print("Description: " + account.description)
 print("\n#===================================================#\n\n")

@@ -2,7 +2,7 @@
     File Name: Classes.py
     Author: Adam Walker
     Date Created: 12/03/2017
-    Date Last Modified: 16/04/2017
+    Date Last Modified: 21/04/2017
     Python Version: 3.6.0
 '''
 
@@ -15,6 +15,7 @@ class TwitterAccount(object):
         self.description = description
         self.tweets = []
         self.associatedUsers = {}
+        self.gender = "N/A"
 
 class Tweet(object):
 

@@ -2,7 +2,7 @@
     File Name: TweetAnalysis.py
     Author: Adam Walker
     Date Created: 05/03/2017
-    Date Last Modified: 20/04/2017
+    Date Last Modified: 21/04/2017
     Python Version: 3.6.0
 '''
 
@@ -11,9 +11,10 @@ from nltk.sentiment.vader import SentimentIntensityAnalyzer as vaderSentiment
 from nltk.corpus import stopwords
 from geopy.geocoders import Nominatim
 from spacy.en import English
+import gender_guesser.detector as gender
 
 nlp = English()
-
+detect = gender.Detector(case_sensitive=False)
 ## This function takes a sentence and returns a dictionary containing
 ## the sentiment polarity scores from the vader sentiment analyser
 def getSentimentScores(sentence):
@@ -89,3 +90,7 @@ def GetAddressFromCoords(lat, long):
     geolocator = Nominatim()
     location = geolocator.reverse(coords)
     return location.address
+
+def getGender(name):
+    gen = detect.get_gender(name)
+    return gen.title()
