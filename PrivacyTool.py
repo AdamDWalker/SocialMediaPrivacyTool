@@ -119,6 +119,8 @@ if (user.protected == False):
     totalNeg = 0
     locationCount = 0
     totalKeywords = []
+    posKeywords = []
+    negKeywords = []
 
     daysCount = [0, 0, 0, 0, 0, 0, 0]
     posDays = [0, 0, 0, 0, 0, 0, 0]
@@ -156,10 +158,12 @@ if (user.protected == False):
 
         if (val > 0):
             totalPos += 1
+            posKeywords.extend(tweet.keywords)
         elif (val == 0):
             totalNeu += 1
         else:
             totalNeg += 1
+            negKeywords.extend(tweet.keywords)
         tweet.sentiment = list(vs.values())[3]
 
         if(tweet.coordinates != None):
@@ -274,7 +278,11 @@ if (user.protected == False):
         outputLocations(True)
 
     keywordString = ' '.join(totalKeywords)
-    Charts.generateWordcloud(keywordString, "Tweet keywords - " + account.realname, "Wordcloud.png")
+    Charts.generateWordcloud(keywordString, "Tweet keywords - " + account.realname, "TotalWordcloud.png")
+    posKeywordString = ' '.join(posKeywords)
+    Charts.generateWordcloud(posKeywordString, "Positive tweet keywords - " + account.realname, "PosWordcloud.png")
+    negKeywordString = ' '.join(negKeywords)
+    Charts.generateWordcloud(negKeywordString, "Negative tweet keywords - " + account.realname, "NegWordcloud.png")
     print("\nProgram complete. Please see output file for details.")
 
 else:
