@@ -7,12 +7,12 @@
 '''
 
 import nltk, re
+import gender_guesser.detector as gender
 from nltk.sentiment.vader import SentimentIntensityAnalyzer as vaderSentiment
 from nltk.corpus import stopwords
 from geopy.geocoders import Nominatim
 from geotext import GeoText
 from spacy.en import English
-import gender_guesser.detector as gender
 
 nlp = English()
 detect = gender.Detector(case_sensitive=False)
@@ -74,10 +74,10 @@ def getKeywords(text):
 
 ## Takes the text string of a tweet and returns an array of any usernames in that tweet
 def extractUsernames(tweet):
-    twitter_username_re = re.findall(r'@([A-Za-z0-9_]+)', tweet)
+    usernames = re.findall(r'@([A-Za-z0-9_]+)', tweet)
     # if(len(twitter_username_re) != 0):
     #     print(twitter_username_re)
-    return twitter_username_re
+    return usernames
 
 def extractHashtags(tweet):
     hashtags = re.findall(r'#([A-Za-z0-9]+)', tweet)
