@@ -33,6 +33,16 @@ def generateLogFile():
 
     logfile.close()
 
+def outputTweets(tweets, title, filename):
+    tweetLog = open(filename, "w")
+
+    tweetLog.write("\t===== " + title + " =====\n\n")
+    for tweet in tweets:
+        tweetLog.write("\nSentiment: " + str(tweet.sentiment) + " \t Keywords: " + str(tweet.keywords) + "\n")
+        tweetLog.write("\tTweet: " + tweet.text + "\n")
+
+    tweetLog.close()
+
 def outputLocations(isEmpty):
     locCount = 0
     locFile = open("Location_Log.txt", "w")
@@ -112,11 +122,10 @@ if place.cities:
     account.places.append(place.cities)
 elif place.countries:
     account.places.append(place.countries)
+elif place.country_mentions:
+    account.places.append(place.country_mentions)
 elif place.nationalities:
     account.places.append(place.nationalities)
-
-if account.places:
-    print(account.places)
 
 if (user.protected == False):
 
@@ -150,6 +159,8 @@ if (user.protected == False):
     totalKeywords = []
     posKeywords = []
     negKeywords = []
+    posTweets = []
+    negTweets = []
 
     daysCount = [0, 0, 0, 0, 0, 0, 0]
     posDays = [0, 0, 0, 0, 0, 0, 0]
@@ -180,9 +191,6 @@ if (user.protected == False):
         elif place.nationalities:
             tweet.places.append(place.nationalities)
 
-        if tweet.places:
-            print(tweet.places)
-
         if(tweet.isRT == True):
             RTCount += 1
 
@@ -200,11 +208,13 @@ if (user.protected == False):
         if (val > 0):
             totalPos += 1
             posKeywords.extend(tweet.keywords)
+            posTweets.append(tweet)
         elif (val == 0):
             totalNeu += 1
         else:
             totalNeg += 1
             negKeywords.extend(tweet.keywords)
+            negTweets.append(tweet)
         tweet.sentiment = list(vs.values())[3]
 
         if(tweet.coordinates != None):
@@ -313,6 +323,8 @@ if (user.protected == False):
     Charts.generateBarChart(3, posDays, negDays, neuDays, days, legend, "Tweets", "Days", "Tweet sentiment by day - " + account.realname, "SentimentByDay.png")
 
     generateLogFile()
+    outputTweets(posTweets, "Positive tweets by keyword", "Positive_Tweets_Log.txt")
+    outputTweets(negTweets, "Negative tweets by keyword", "Negative_Tweets_Log.txt")
     if(locationCount != 0):
         outputLocations(False)
     else:
@@ -324,7 +336,7 @@ if (user.protected == False):
     Charts.generateWordcloud(posKeywordString, "Positive tweet keywords - " + account.realname, "PosWordcloud.png")
     negKeywordString = ' '.join(negKeywords)
     Charts.generateWordcloud(negKeywordString, "Negative tweet keywords - " + account.realname, "NegWordcloud.png")
-    print("\nProgram complete. Please see output file for details.")
+    print("\nProgram complete. Please see output files for details.")
 
 else:
     print("#===================================================#\n")
