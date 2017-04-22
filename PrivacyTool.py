@@ -34,7 +34,10 @@ def generateLogFile():
     logfile.close()
 
 def outputLocations(isEmpty):
+    locCount = 0
     locFile = open("Location_Log.txt", "w")
+
+    locFile.write("\t===== Location enabled Tweets =====\n")
 
     if(isEmpty):
         locFile.write("No locations found for account: " + str(account.realname))
@@ -44,6 +47,19 @@ def outputLocations(isEmpty):
                 locFile.write("|Location| - " + tweet.location + "\n")
                 locFile.write("\t|Date| - " + tweet.day + " " + tweet.date.strftime("%d/%m/%y -- %H:%M") + "\n")
 
+    locFile.write("\n\n\t===== Location Names in text =====\n")
+    if account.places:
+        locFile.write("Account description locations: " + str(account.places) + "\n\n")
+    else:
+        locFile.write("No locations found in account description" + "\n\n")
+
+    for tweet in account.tweets:
+        if tweet.places:
+            locFile.write("\nLocations: " + str(tweet.places) + "\n")
+            locFile.write("\tFrom tweet: " + tweet.text + "\n")
+            locCount += 1
+    if(locCount == 0):
+        locFile.write("\nNo locations found in tweets")
     locFile.close()
 
 # Consumer keys and access tokens, used for OAuth
