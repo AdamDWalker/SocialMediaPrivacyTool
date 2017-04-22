@@ -3,5 +3,6 @@
 !requirements.txt
 *.png
 /Output_Images
+/Output_Logs
 
 __pycache__
