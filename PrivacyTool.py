@@ -155,6 +155,18 @@ if (user.protected == False):
         vs = TweetAnalysis.getSentimentScores(tweet.text)
         val = TweetAnalysis.getSentimentClass(vs)
 
+        place = TweetAnalysis.findPlaces(tweet.text)
+
+        if place.cities:
+            tweet.places.append(place.cities)
+        elif place.countries:
+            tweet.places.append(place.countries)
+        elif place.nationalities:
+            tweet.places.append(place.nationalities)
+
+        if tweet.places:
+            print(tweet.places)
+
         if(tweet.isRT == True):
             RTCount += 1
 
