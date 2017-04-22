@@ -90,6 +90,18 @@ print("Follower Count: " + str(account.followers))
 print("Description: " + account.description)
 print("\n#===================================================#\n\n")
 
+place = TweetAnalysis.findPlaces(account.description)
+
+if place.cities:
+    account.places.append(place.cities)
+elif place.countries:
+    account.places.append(place.countries)
+elif place.nationalities:
+    account.places.append(place.nationalities)
+
+if account.places:
+    print(account.places)
+
 if (user.protected == False):
 
     page_list = []

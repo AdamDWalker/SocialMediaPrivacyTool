@@ -10,6 +10,7 @@ import nltk, re
 from nltk.sentiment.vader import SentimentIntensityAnalyzer as vaderSentiment
 from nltk.corpus import stopwords
 from geopy.geocoders import Nominatim
+from geotext import GeoText
 from spacy.en import English
 import gender_guesser.detector as gender
 
@@ -90,6 +91,10 @@ def GetAddressFromCoords(lat, long):
     geolocator = Nominatim()
     location = geolocator.reverse(coords)
     return location.address
+
+def findPlaces(text):
+    places = GeoText(text)
+    return places
 
 def getGender(name):
     gen = detect.get_gender(name)

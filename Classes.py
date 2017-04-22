@@ -13,6 +13,7 @@ class TwitterAccount(object):
         self.realname = realname
         self.followers = followers
         self.description = description
+        self.places = []
         self.tweets = []
         self.associatedUsers = {}
         self.gender = "N/A"
