@@ -18,7 +18,8 @@ from collections import Counter
 ## log them out into a text file that can be used for other things
 ## == Ideally this should be shortened to just logging and no analysis, and also moved to the start of the code/another file == ##
 def generateLogFile():
-    logfile = open("Output_Log.txt", "w")
+    Charts.create_directory("Output_Logs/")
+    logfile = open("Output_Logs/Total_Output_Log.txt", "w")
 
 # Print each tweet and it's timestamp into a log file, with a line break every 25 for easier readability
     count = 1
@@ -34,6 +35,7 @@ def generateLogFile():
     logfile.close()
 
 def outputTweets(tweets, title, filename):
+    Charts.create_directory("Output_Logs/")
     tweetLog = open(filename, "w")
 
     tweetLog.write("\t===== " + title + " =====\n\n")
@@ -45,7 +47,8 @@ def outputTweets(tweets, title, filename):
 
 def outputLocations(isEmpty):
     locCount = 0
-    locFile = open("Location_Log.txt", "w")
+    Charts.create_directory("Output_Logs/")
+    locFile = open("Output_Logs/Location_Log.txt", "w")
 
     locFile.write("\t===== Location enabled Tweets =====\n")
 
@@ -323,8 +326,8 @@ if (user.protected == False):
     Charts.generateBarChart(3, posDays, negDays, neuDays, days, legend, "Tweets", "Days", "Tweet sentiment by day - " + account.realname, "SentimentByDay.png")
 
     generateLogFile()
-    outputTweets(posTweets, "Positive tweets by keyword", "Positive_Tweets_Log.txt")
-    outputTweets(negTweets, "Negative tweets by keyword", "Negative_Tweets_Log.txt")
+    outputTweets(posTweets, "Positive tweets by keyword", "Output_Logs/Positive_Tweets_Log.txt")
+    outputTweets(negTweets, "Negative tweets by keyword", "Output_Logs/Negative_Tweets_Log.txt")
     if(locationCount != 0):
         outputLocations(False)
     else:
