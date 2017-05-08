@@ -33,7 +33,8 @@ def generateLogFile():
         count = count+1
 
     logfile.close()
-
+##
+## Outputs a specific set of tweets to a file
 def outputTweets(tweets, title, filename):
     Charts.create_directory("Output_Logs/")
     tweetLog = open(filename, "w")
@@ -45,6 +46,8 @@ def outputTweets(tweets, title, filename):
 
     tweetLog.close()
 
+## Outputs all locations to a file
+## Formats the location enabled stuff first, then location mentions
 def outputLocations(isEmpty):
     locCount = 0
     Charts.create_directory("Output_Logs/")
@@ -57,6 +60,7 @@ def outputLocations(isEmpty):
     else:
         for tweet in account.tweets:
             if (tweet.location != "N/A"):
+                locFile.write("|Coords| - " + str(tweet.coordinates) + "\n")
                 locFile.write("|Location| - " + tweet.location + "\n")
                 locFile.write("\t|Date| - " + tweet.day + " " + tweet.date.strftime("%d/%m/%y -- %H:%M") + "\n")
 
@@ -85,12 +89,12 @@ access_token_secret = 'Fu6m7teENyTVs92mWUt0UKriZun1vC3Ny5o1WkwpWlM8f'
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
 
-    # plot.show()
 # Creation of the actual interface, using authentication
 api = tweepy.API(auth)
 
 validUser = False
 
+# If the username isn't real, try again
 while validUser == False:
     username = input("Please enter Twitter username: ")
     try:
@@ -110,17 +114,21 @@ else:
     include_retweets = False
     print("\nInvalid input, defaulting to no")
 
+# Get the account information and create an account object to store it all.
 account = Classes.TwitterAccount(user.screen_name, user.name, user.followers_count, user.description)
 account.gender = TweetAnalysis.getGender(account.realname.split(None, 1)[0])
-print("\n#===================================================#\n")
+
+# Console debug heading information about account details
+print("\n\t#===================================================#\n")
 print("Username: " + account.username + " --- Name: " + account.realname)
 print("Gender: " + account.gender)
 print("Follower Count: " + str(account.followers))
 print("Description: " + account.description)
-print("\n#===================================================#\n\n")
+print("\n\t#===================================================#\n\n")
 
 place = TweetAnalysis.findPlaces(account.description)
 
+# CHeck the account description for any place mentions
 if place.cities:
     account.places.append(place.cities)
 elif place.countries:
@@ -130,6 +138,7 @@ elif place.country_mentions:
 elif place.nationalities:
     account.places.append(place.nationalities)
 
+# If the account is protected none of this will work anyway
 if (user.protected == False):
 
     page_list = []
@@ -140,6 +149,7 @@ if (user.protected == False):
         n = n+1
         print(n)
 
+    # For each page of tweets, grab all these different bits of data and store them as tweet objects
     for page in page_list:
         for status in page:
             tweet = Classes.Tweet(status.text, status.created_at, status.coordinates)
@@ -155,6 +165,7 @@ if (user.protected == False):
 
     print("\nExtracted: " + str(len(account.tweets)) + " tweets.\n")
 
+    # For percentages of tweets and whatnot
     totalPos = 0
     totalNeu = 0
     totalNeg = 0
@@ -172,9 +183,13 @@ if (user.protected == False):
 
     RTCount = 0
 
+    # This is the main loop where the tweets undergo each different NLP technique and whatever else needs doing
     for tweet in account.tweets:
+
+        # Get these here before anything changes the tweet text
         users = TweetAnalysis.extractUsernames(tweet.text)
         tweet.hashtags = TweetAnalysis.extractHashtags(tweet.text)
+
 
         for user in users:
             if (user in account.associatedUsers):
@@ -182,9 +197,11 @@ if (user.protected == False):
             else:
                 account.associatedUsers[user] = 1
 
+        # Get the sentiment polarity scores, then get what sentiment class that is (e.g. pos/neg/neu)
         vs = TweetAnalysis.getSentimentScores(tweet.text)
         val = TweetAnalysis.getSentimentClass(vs)
 
+        # Get any places mentioned in the tweet
         place = TweetAnalysis.findPlaces(tweet.text)
 
         if place.cities:
@@ -197,6 +214,9 @@ if (user.protected == False):
         if(tweet.isRT == True):
             RTCount += 1
 
+        # Keyword extraction. Roughly follows the Information extraction 'pipeline'
+        # Raw text -> tokenised (and stripped of unwanted stuff) -> tagged -> NE recognition -> relation recognition
+        # Using Spacy to extract keywords, gets named entities then removes the object/subject and root of the sentence for keywords.
         textTemp = TweetAnalysis.stripPunctuation(tweet.text)
         tokens = TweetAnalysis.getTokens(textTemp)
         tagged = TweetAnalysis.getTags(tokens)

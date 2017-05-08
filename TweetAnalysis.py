@@ -11,6 +11,7 @@ import gender_guesser.detector as gender
 from nltk.sentiment.vader import SentimentIntensityAnalyzer as vaderSentiment
 from nltk.corpus import stopwords
 from geopy.geocoders import Nominatim
+from geopy.exc import GeocoderTimedOut
 from geotext import GeoText
 from spacy.en import English
 
@@ -88,8 +89,11 @@ def extractHashtags(tweet):
 ## Take lat and long, convert to a string for the function format and return the address from a reverse lookup
 def GetAddressFromCoords(lat, long):
     coords = str(lat) + ", " + str(long)
-    geolocator = Nominatim()
-    location = geolocator.reverse(coords)
+    try:
+        geolocator = Nominatim()
+        location = geolocator.reverse(coords, timeout=10)
+    except GeocoderTimedOut as e:
+        print("Error: geocode failed on input %s with message %s"%(coords, e.message))
     return location.address
 
 def findPlaces(text):
