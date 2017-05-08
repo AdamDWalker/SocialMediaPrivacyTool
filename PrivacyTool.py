@@ -79,6 +79,18 @@ def outputLocations(isEmpty):
         locFile.write("\nNo locations found in tweets")
     locFile.close()
 
+def outputUsers(isEmpty):
+    Charts.create_directory("Output_Logs/")
+    userLogFile = open("Output_Logs/User_Log.txt", "w")
+
+    if(isEmpty):
+        userLogFile.write("No users found for account: " + str(account.realname))
+    else:
+        userLogFile.write("Users tweeted to by count from account: " + str(account.realname) + "\n\n")
+        for k, v in d.most_common():
+            userLogFile.write('%s: %i\n' % (k, v))
+    userLogFile.close()
+
 # Consumer keys and access tokens, used for OAuth
 consumer_key = 'YUOKTebHRQH1MUv3ZlIZ3SKM3'
 consumer_secret = 'FZJtpidnF24hDL6wgTAf2Tfqa8lJj8ZaVzWLbzOAdAty7cxDFe'
@@ -352,6 +364,11 @@ if (user.protected == False):
         outputLocations(False)
     else:
         outputLocations(True)
+
+    if d:
+        outputUsers(False)
+    else:
+        outputUsers(True)
 
     keywordString = ' '.join(totalKeywords)
     Charts.generateWordcloud(keywordString, "Tweet keywords - " + account.realname, "TotalWordcloud.png")
