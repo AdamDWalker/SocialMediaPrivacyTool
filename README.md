@@ -1,5 +1,8 @@
 # SocialMediaPrivacyTool
-This is the repository of the tool for extracting and analysing information from social media written as part of my dissertation.
+This is the repository of the tool for extracting and analysing information from social media written as part of my dissertation. 
+
+_Note:_ The access keys and tokens have been revoked and no longer work so don't bother trying.
+
 
 -- Abstract --
 
